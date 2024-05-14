@@ -26,18 +26,24 @@ onMounted(() => {
 	<div id="overlay">
 		<BaseSpinner :show="showSpinner" />
 	</div>
-
-	<NavBar />
-	<div class="flex items-center justify-center py-6">
-		<div class="message-wrapper px-9">
-			<BaseMessage
-				title="Attention! This is a Beta version of this website."
-				description="This Beta version does not represent the final quality of the product. Thank you for your understanding and support."
-				severity="warning"
-			/>
+	<main class="flex flex-col justify-between h-100vh">
+		<div>
+			<NavBar />
+			<div class="flex items-center justify-center py-6">
+				<div class="message-wrapper px-9">
+					<BaseMessage
+						title="Attention! This is a Beta version of this website."
+						description="This Beta version does not represent the final quality of the product. Thank you for your understanding and support."
+						severity="warning"
+					/>
+				</div>
+			</div>
+			<NuxtPage />
 		</div>
-	</div>
-	<NuxtPage />
+		<FooterCopyright>
+			<h1>hola</h1>
+		</FooterCopyright>
+	</main>
 </template>
 
 <style scoped>

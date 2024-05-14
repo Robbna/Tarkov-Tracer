@@ -37,13 +37,13 @@ const ROUTER_LINKS = [
 	position: sticky;
 	top: 0;
 	font-size: 1.8rem;
-	backdrop-filter: blur(10px);
 }
 
 a {
 	color: #f1f1f1;
 	text-decoration: none;
 	background-color: rgba(0, 0, 0, 0.26);
+	backdrop-filter: blur(6px);
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	overflow: hidden;

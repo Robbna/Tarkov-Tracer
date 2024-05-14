@@ -1,0 +1,21 @@
+@import url("primevue/resources/themes/mdc-dark-indigo/theme.css");
+@import url("./fonts.css");
+
+@tailwind components;
+@tailwind utilities;
+
+
+
+* {
+  margin: 0;
+  font-family: "Bender EFT";
+  font-weight: normal;
+}
+
+body {
+  background-image: url("~/assets/images/eft_background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}

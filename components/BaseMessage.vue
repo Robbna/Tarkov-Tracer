@@ -1,0 +1,43 @@
+<script setup lang="ts">
+const props = defineProps<{
+	title: string;
+	description: string;
+	severity: "info" | "warning" | "error";
+}>();
+</script>
+<template>
+	<div :class="['message-wrapper', props.severity, 'flex items-center gap-9']">
+		<i class="warning-icon fa-solid fa-triangle-exclamation fa-2xl" />
+		<div>
+			<h1>{{ title }}</h1>
+			<p>{{ description }}</p>
+		</div>
+	</div>
+</template>
+
+<style scoped>
+.message-wrapper {
+	color: #1f1f1f;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+	& h1 {
+		font-size: 1.7rem;
+	}
+
+	&.info {
+		color: #f1f1f1;
+		background-color: rgb(89, 174, 85);
+	}
+
+	&.warning {
+		background-color: rgb(253, 233, 69);
+	}
+
+	&.error {
+		color: #f1f1f1;
+		background-color: rgb(235, 66, 49);
+	}
+}
+</style>

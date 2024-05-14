@@ -26,7 +26,7 @@ onMounted(() => {
 	<div id="overlay">
 		<BaseSpinner :show="showSpinner" />
 	</div>
-	<main class="flex flex-col justify-between h-100vh">
+	<main class="h-screen flex flex-col justify-between">
 		<div>
 			<NavBar />
 			<div class="flex items-center justify-center py-6">

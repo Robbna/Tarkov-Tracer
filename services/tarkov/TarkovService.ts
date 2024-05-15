@@ -31,9 +31,16 @@ export class TarkovService {
 	`;
 
 	public static async getAllItems(): Promise<IGetItemsResponse> {
-		return await request<IGetItemsResponse>(
-			"https://api.tarkov.dev/graphql",
-			this.QUERY_ALL_ITEMS,
-		);
+		const response = await request<IGetItemsResponse>("https://api.tarkov.dev/graphql", this.QUERY_ALL_ITEMS);
+
+		// Remove "Flea Market" vendor from sellFor array
+		response.items = response.items.map((item) => {
+			return {
+				...item,
+				sellFor: item.sellFor.filter((sell) => sell.vendor.name !== "Flea Market"),
+			};
+		});
+
+		return response;
 	}
 }

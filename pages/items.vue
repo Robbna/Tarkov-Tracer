@@ -1,30 +1,43 @@
 <script setup lang="ts">
-import type { AutoCompleteCompleteEvent } from "primevue/autocomplete";
+import type { AutoCompleteCompleteEvent, AutoCompleteItemSelectEvent } from "primevue/autocomplete";
 import type { IItem } from "~/services/tarkov/types";
 import { useItems } from "~/stores/items/Items";
+
+interface IItemDisplayed {
+	item: IItem;
+	visible: boolean;
+}
 
 const storeItems = useItems();
 
 const selectedItem = ref<IItem | null>(null);
-const filteredItems = ref();
+const itemsDisplayed = ref<IItemDisplayed[]>([]);
+const filteredItems = ref<IItem[]>([]);
 
-const search = (event: AutoCompleteCompleteEvent) => {
+const onSearch = (event: AutoCompleteCompleteEvent) => {
 	if (storeItems.items === null) {
 		return;
 	}
 
 	filteredItems.value = Array.from(
 		new Set([
-			...storeItems.items.filter((item) =>
-				item.shortName
-					.toLowerCase()
-					.startsWith(event.query.trim().toLowerCase()),
-			),
-			...storeItems.items.filter((item) =>
-				item.shortName.toLowerCase().includes(event.query.trim().toLowerCase()),
-			),
+			...storeItems.items.filter((item) => item.shortName.toLowerCase().startsWith(event.query.trim().toLowerCase())),
+			...storeItems.items.filter((item) => item.shortName.toLowerCase().includes(event.query.trim().toLowerCase())),
 		]),
 	);
+};
+
+const onSelectedItem = (item: AutoCompleteItemSelectEvent) => {
+	itemsDisplayed.value.push({
+		item: item.value,
+		visible: true,
+	});
+};
+
+const onCloseAllWindows = () => {
+	itemsDisplayed.value.forEach((itemDisplayed) => {
+		itemDisplayed.visible = false;
+	});
 };
 </script>
 
@@ -38,12 +51,19 @@ const search = (event: AutoCompleteCompleteEvent) => {
 				placeholder="AKS-74U, Kappa, etc..."
 				:suggestions="filteredItems"
 				:virtualScrollerOptions="{ itemSize: 38 }"
-				@complete="search"
+				@complete="onSearch"
+				@item-select="onSelectedItem"
 			/>
+			<button @click="onCloseAllWindows">Close all</button>
 		</div>
-		<section v-if="selectedItem && typeof selectedItem === 'object'">
-			<ItemCard :item="selectedItem" />
-		</section>
+		<Dialog
+			v-model:visible="itemDisplayed.visible"
+			v-for="(itemDisplayed, index) in itemsDisplayed"
+			:key="index"
+			draggable
+		>
+			<ItemCard :item="itemDisplayed.item" :on-close="() => (itemDisplayed.visible = false)" />
+		</Dialog>
 	</main>
 </template>
 

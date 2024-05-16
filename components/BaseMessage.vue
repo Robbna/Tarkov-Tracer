@@ -6,7 +6,7 @@ const props = defineProps<{
 }>();
 </script>
 <template>
-	<div :class="['message-wrapper', props.severity, 'flex items-center gap-9']">
+	<div :class="['message-wrapper', props.severity, 'flex items-center justify-center gap-3 px-3 py-2']">
 		<i class="warning-icon fa-solid fa-triangle-exclamation fa-2xl" />
 		<div>
 			<h1>{{ title }}</h1>
@@ -18,7 +18,6 @@ const props = defineProps<{
 <style scoped>
 .message-wrapper {
 	color: #1f1f1f;
-	padding: 1rem;
 	border-radius: 0.5rem;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 

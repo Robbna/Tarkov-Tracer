@@ -33,7 +33,7 @@ onMounted(() => {
 				<div class="message-wrapper px-9">
 					<BaseMessage
 						title="Attention! This is a Beta version of this website."
-						description="This Beta version does not represent the final quality of the product. Thank you for your understanding and support."
+						description="This Beta version does not represent the final quality of the website. Thank you for your understanding and support."
 						severity="warning"
 					/>
 				</div>

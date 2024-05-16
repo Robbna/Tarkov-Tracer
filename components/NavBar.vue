@@ -19,11 +19,7 @@ const ROUTER_LINKS = [
 </script>
 <template>
 	<nav class="navbar flex gap-2 items-center justify-center px-2">
-		<router-link
-			v-for="(link, index) in ROUTER_LINKS"
-			:key="index"
-			:to="link.path"
-		>
+		<router-link v-for="(link, index) in ROUTER_LINKS" :key="index" :to="link.path">
 			<span>
 				<i :class="`fa-solid ${link.icon}`" />
 				{{ link.text }}
@@ -36,6 +32,7 @@ const ROUTER_LINKS = [
 .navbar {
 	position: sticky;
 	top: 0;
+	z-index: 100;
 	font-size: 1.8rem;
 }
 

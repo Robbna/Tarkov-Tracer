@@ -112,9 +112,11 @@ header {
 .item-card {
 	border: 1px solid rgb(91, 93, 91);
 
+	width: 454px;
 	max-width: 600px;
 	min-width: 330px;
 
+	height: 474px;
 	min-height: 300px;
 	max-height: 600px;
 

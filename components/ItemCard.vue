@@ -48,7 +48,7 @@ const formatter = new Intl.NumberFormat("ru-RU", {
 				<p>{{ sortedVendorsByPrice[0].vendor.name }} : {{ sortedVendorsByPrice[0].price }}</p>
 				<i class="fa-solid fa-ruble-sign" />
 			</div>
-			<img :src="props.item.inspectImageLink" alt="item image" />
+			<img draggable="false" :src="props.item.inspectImageLink" alt="item image" />
 		</section>
 
 		<!-- Footer -->

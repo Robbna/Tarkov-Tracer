@@ -30,7 +30,7 @@ const zoom = (e: MouseEvent) => {
 			:style="{ backgroundImage: `url(${props.url})`, 'background-size': `${props.zoomIn}` }"
 			@mousemove="zoom"
 		>
-			<img :src="props.url" :alt="props.alt" />
+			<img draggable="false" :src="props.url" :alt="props.alt" />
 		</figure>
 	</div>
 </template>

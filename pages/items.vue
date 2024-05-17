@@ -57,7 +57,7 @@ const onCloseAllWindows = () => {
 			>
 				<template #option="slotProps">
 					<div class="grid grid-cols-[140px_auto] items-center text-wrap">
-						<img :alt="slotProps.option.name" :src="slotProps.option.image8xLink" />
+						<img draggable="false" :alt="slotProps.option.name" :src="slotProps.option.image8xLink" />
 						<div class="flex flex-col gap-[6px]">
 							<p>{{ slotProps.option.name }}</p>
 							<p class="text-sm">“{{ slotProps.option.shortName }}”</p>

@@ -76,3 +76,24 @@ PRIMEVUE
 .p-autocomplete-empty-message {
   padding: 10px;
 }
+
+.p-dialog.p-component.p-ripple-disabled {
+  border-radius: 0;
+}
+
+.p-dialog-header {
+  padding: 0;
+  height: 30px;
+}
+
+.p-dialog-content {
+  padding: 0;
+}
+
+.p-dialog  {
+  /* border: 1px solid red;
+
+  & * {
+    border: 1px solid blue;
+  } */
+}

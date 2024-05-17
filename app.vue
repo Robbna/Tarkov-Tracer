@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { routerKey } from "vue-router";
+import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 import { useItems } from "~/stores/items/Items";
 const { isMobile } = useDevice();
 
@@ -29,6 +29,7 @@ onMounted(async () => {
 </script>
 
 <template>
+	<SpeedInsights />
 	<div id="overlay">
 		<BaseSpinner :show="showSpinner" />
 	</div>

@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { routerKey } from "vue-router";
 import { useItems } from "~/stores/items/Items";
+const { isMobile } = useDevice();
 
 useHead({
 	title: "Tarkov Tracer",
@@ -12,10 +14,14 @@ useHead({
 });
 
 const storeItems = useItems();
+const showSpinner = ref(false);
 
-const showSpinner = ref(true);
+onMounted(async () => {
+	if (isMobile) {
+		return;
+	}
 
-onMounted(() => {
+	showSpinner.value = true;
 	storeItems.fetchItems().then(() => {
 		showSpinner.value = false;
 	});
@@ -26,7 +32,7 @@ onMounted(() => {
 	<div id="overlay">
 		<BaseSpinner :show="showSpinner" />
 	</div>
-	<main class="h-screen flex flex-col justify-between">
+	<main v-if="!isMobile" class="h-screen flex flex-col justify-between">
 		<div>
 			<NavBar />
 			<div class="flex items-center justify-center py-6">
@@ -40,9 +46,16 @@ onMounted(() => {
 			</div>
 			<NuxtPage />
 		</div>
-		<FooterCopyright>
-			<h1>hola</h1>
-		</FooterCopyright>
+	</main>
+	<main v-else class="h-screen flex flex-col justify-between items-center p-3">
+		<div class="h-screen flex items-center p-3">
+			<BaseMessage
+				title="Attention! Not Available on Mobile"
+				description="This Beta version of the website is only accessible on desktop devices. Thank you for your understanding and support."
+				severity="warning"
+			/>
+		</div>
+		<FooterCopyright />
 	</main>
 </template>
 

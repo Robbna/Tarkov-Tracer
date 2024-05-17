@@ -5,6 +5,7 @@ export default defineNuxtConfig({
 	},
 	css: ["~/assets/css/main.css"],
 	modules: ["nuxt-primevue", "@pinia/nuxt", "@nuxtjs/device"],
+	plugins: ["~/plugins/analytics.ts"],
 	postcss: {
 		plugins: {
 			tailwindcss: {},

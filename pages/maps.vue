@@ -37,15 +37,31 @@ const MAPS_URL = [
 		zoomIn: 250,
 	},
 ];
+
+const route = useRoute();
 </script>
 <template>
 	<div>
 		<div class="flex flex-col items-center justify-center gap-9 mt-9">
-			<section v-for="map in MAPS_URL" :key="map.name" class="flex flex-col gap-2 items-center">
-				<h1>{{ map.name }}</h1>
-				<hr class="w-full" />
+			<section v-for="map in MAPS_URL" :key="map.name" :id="map.id" class="flex flex-col gap-2 items-center">
+				<a class="flex items-center gap-3" :href="`${route.path}#${map.id}`">
+					<i class="fa-solid fa-link" />
+					<h1>{{ map.name }}</h1>
+				</a>
 				<BaseImage :url="map.url" :alt="map.id" :zoom-in="map.zoomIn" />
 			</section>
 		</div>
 	</div>
 </template>
+
+<style scoped>
+a {
+	text-decoration: none;
+	color: inherit;
+	height: 40px;
+	&:hover {
+		/* color: rgb(182, 178, 139); */
+		border-bottom: 2px solid;
+	}
+}
+</style>

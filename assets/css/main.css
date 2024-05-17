@@ -53,3 +53,26 @@ PRIMEVUE
 [data-p-index="0"] {
   color: rgb(6, 221, 6);
 }
+
+.p-autocomplete-panel.p-component.p-ripple-disabled {
+  border: 1px solid rgb(91, 93, 91);
+  color: white;
+  background-color: rgba(31, 31, 31, 0.693);
+  backdrop-filter: blur(6px);
+}
+
+.p-autocomplete-panel.p-component.p-ripple-disabled {
+  border-radius: 0;
+}
+
+.p-virtualscroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+.p-virtualscroller::-webkit-scrollbar-thumb {
+  background: rgb(80, 79, 80);
+}
+
+.p-autocomplete-empty-message {
+  padding: 10px;
+}

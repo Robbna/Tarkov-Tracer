@@ -23,6 +23,7 @@ const onSearch = (event: AutoCompleteCompleteEvent) => {
 		new Set([
 			...storeItems.items.filter((item) => item.shortName.toLowerCase().startsWith(event.query.trim().toLowerCase())),
 			...storeItems.items.filter((item) => item.shortName.toLowerCase().includes(event.query.trim().toLowerCase())),
+			...storeItems.items.filter((item) => item.name.toLowerCase().includes(event.query.trim().toLowerCase())),
 		]),
 	);
 };
@@ -43,17 +44,28 @@ const onCloseAllWindows = () => {
 
 <template>
 	<main class="flex flex-col items-center justify-center gap-9 mt-9">
-		<div class="flex flex-col w-64 gap-1">
+		<div class="flex flex-col w-96 gap-1">
 			<h1 class="text-3xl text-center">Search item</h1>
 			<AutoComplete
 				v-model="selectedItem"
 				optionLabel="shortName"
 				placeholder="AKS-74U, Kappa, etc..."
 				:suggestions="filteredItems"
-				:virtualScrollerOptions="{ itemSize: 38 }"
+				:virtualScrollerOptions="{ itemSize: 140 }"
 				@complete="onSearch"
 				@item-select="onSelectedItem"
-			/>
+			>
+				<template #option="slotProps">
+					<div class="grid grid-cols-[140px_auto] items-center text-wrap">
+						<img :alt="slotProps.option.name" :src="slotProps.option.image8xLink" />
+						<div class="flex flex-col gap-[6px]">
+							<p>{{ slotProps.option.name }}</p>
+							<p class="text-sm">“{{ slotProps.option.shortName }}”</p>
+							<p class="text-right text-2xl">{{ slotProps.option.basePrice }} <i class="fa-solid fa-ruble-sign" /></p>
+						</div>
+					</div>
+				</template>
+			</AutoComplete>
 			<button @click="onCloseAllWindows">Close all</button>
 		</div>
 		<Dialog
@@ -72,5 +84,27 @@ const onCloseAllWindows = () => {
 	color: white;
 	background-color: rgba(31, 31, 31, 0.3);
 	width: 100%;
+	border-radius: 0;
+}
+
+:deep(.p-autocomplete-items.p-virtualscroller-content) {
+	background-color: rgba(31, 31, 31, 0.3);
+}
+
+button {
+	border: none;
+	padding: 3px;
+	background-color: rgb(129, 131, 129);
+
+	&:hover {
+		cursor: pointer;
+		background-color: rgb(91, 93, 91);
+	}
+}
+
+img {
+	width: 120px;
+	height: 120px;
+	object-fit: contain;
 }
 </style>

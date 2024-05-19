@@ -4,37 +4,43 @@ const MAPS_URL = [
 		name: "Customs",
 		id: "customs",
 		url: "https://tarkov.dev/maps/customs-3d.jpg",
-		zoomIn: 250,
+		zoomIn: 30,
 	},
 	{
 		name: "Ground Zero",
 		id: "ground-zero",
 		url: "https://tarkov.dev/maps/ground-zero-3d.jpg",
-		zoomIn: 250,
+		zoomIn: 30,
 	},
 	{
 		name: "Interchange",
 		id: "interchange",
 		url: "https://i.redd.it/cc75d84cu9m41.jpg",
-		zoomIn: 450,
+		zoomIn: 80,
 	},
 	{
 		name: "Lighthouse",
 		id: "lighthouse",
 		url: "https://tarkov.dev/maps/lighthouse-3d.jpg",
-		zoomIn: 250,
+		zoomIn: 40,
 	},
 	{
 		name: "Shoreline",
 		id: "shoreline",
 		url: "https://tarkov.dev/maps/shoreline-3d.jpg",
-		zoomIn: 250,
+		zoomIn: 60,
 	},
 	{
 		name: "Woods",
 		id: "woods",
 		url: "https://tarkov.dev/maps/woods-3d.jpg",
-		zoomIn: 250,
+		zoomIn: 40,
+	},
+	{
+		name: "Factory",
+		id: "factory",
+		url: "https://tarkov.dev/maps/factory-3d.jpg",
+		zoomIn: 30,
 	},
 ];
 
@@ -60,7 +66,6 @@ a {
 	color: inherit;
 	height: 40px;
 	&:hover {
-		/* color: rgb(182, 178, 139); */
 		border-bottom: 2px solid;
 	}
 }

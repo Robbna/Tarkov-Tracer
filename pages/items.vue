@@ -61,7 +61,7 @@ const onCloseAllWindows = () => {
 						<div class="flex flex-col gap-[6px]">
 							<p>{{ slotProps.option.name }}</p>
 							<p class="text-sm">“{{ slotProps.option.shortName }}”</p>
-							<p class="text-right text-2xl">{{ slotProps.option.basePrice }} <i class="fa-solid fa-ruble-sign" /></p>
+							<p class="text-right text-2xl">{{ slotProps.option.sellFor[0].price }} <i class="fa-solid fa-ruble-sign" /></p>
 						</div>
 					</div>
 				</template>

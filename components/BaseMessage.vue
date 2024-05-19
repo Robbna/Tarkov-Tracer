@@ -6,11 +6,11 @@ const props = defineProps<{
 }>();
 </script>
 <template>
-	<div :class="['message-wrapper', props.severity, 'flex items-center justify-center gap-3 px-3 py-2']">
+	<div :class="['message-wrapper', props.severity, 'flex items-center justify-center gap-3 p-3']">
 		<i class="warning-icon fa-solid fa-triangle-exclamation fa-2xl" />
 		<div>
-			<h1>{{ title }}</h1>
-			<p>{{ description }}</p>
+			<h1 class="text-sm">{{ title }}</h1>
+			<p class="text-sm">{{ description }}</p>
 		</div>
 	</div>
 </template>

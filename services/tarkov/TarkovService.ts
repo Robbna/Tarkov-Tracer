@@ -6,18 +6,19 @@ export class TarkovService {
 	static QUERY_ALL_ITEMS = gql`
 		{
 			items {
-				id
-				name
-				shortName
-				normalizedName
-				description
+				avg24hPrice
 				basePrice
-				weight
+				description
 				height
+				id
 				image8xLink
 				inspectImageLink
-				avg24hPrice
 				link
+				name
+				normalizedName
+				shortName
+				weight
+				wikiLink
 				sellFor {
 					price
 					currency

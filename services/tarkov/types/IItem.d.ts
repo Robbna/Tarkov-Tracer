@@ -15,6 +15,7 @@ export interface IItem {
 	inspectImageLink: string;
 	avg24hPrice: null | number;
 	link: string;
+	wikiLink: string;
 	sellFor: {
 		price: number;
 		currency: string;

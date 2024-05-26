@@ -22,9 +22,8 @@ body {
 PRIMEVUE
 */
 .p-datatable .p-datatable-tbody > tr:not(.p-highlight):focus {
-  background-color: #1e1e1e;
+	background-color: #1e1e1e;
 }
-
 
 /* .p-dialog-header {
   transform: translateY(30px);

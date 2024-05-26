@@ -1,21 +1,10 @@
 <script setup lang="ts">
-// import type { AutoCompleteCompleteEvent, AutoCompleteItemSelectEvent } from "primevue/autocomplete";
-// import type { IItem } from "~/services/tarkov/types/IItem";
 import { useItems } from "~/stores/items/Items";
 import { FilterMatchMode } from "primevue/api";
 import { useTraders } from "~/stores/traders/Traders";
 
-// interface IItemDisplayed {
-// 	item: IItem;
-// 	visible: boolean;
-// }
-
 const storeItems = useItems();
 const storeTraders = useTraders();
-
-// const selectedItem = ref<IItem | null>(null);
-// const itemsDisplayed = ref<IItemDisplayed[]>([]);
-// const filteredItems = ref<IItem[]>([]);
 
 const filters = ref({
 	global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -24,32 +13,20 @@ const filters = ref({
 	weight: { value: null, matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO },
 });
 
-// const onSearch = (event: AutoCompleteCompleteEvent) => {
-// 	if (storeItems.items === null) {
-// 		return;
-// 	}
+const initFilters = () => {
+	filters.value = {
+		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+		name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+		shortName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+		weight: { value: null, matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO },
+	};
+};
 
-// 	filteredItems.value = Array.from(
-// 		new Set([
-// 			...storeItems.items.filter((item) => item.shortName.toLowerCase().startsWith(event.query.trim().toLowerCase())),
-// 			...storeItems.items.filter((item) => item.shortName.toLowerCase().includes(event.query.trim().toLowerCase())),
-// 			...storeItems.items.filter((item) => item.name.toLowerCase().includes(event.query.trim().toLowerCase())),
-// 		]),
-// 	);
-// };
+const clearFilter = () => {
+	initFilters();
+};
 
-// const onSelectedItem = (item: AutoCompleteItemSelectEvent) => {
-// 	itemsDisplayed.value.push({
-// 		item: item.value,
-// 		visible: true,
-// 	});
-// };
-
-// const onCloseAllWindows = () => {
-// 	itemsDisplayed.value.forEach((itemDisplayed) => {
-// 		itemDisplayed.visible = false;
-// 	});
-// };
+initFilters();
 </script>
 
 <template>
@@ -65,7 +42,20 @@ const filters = ref({
 				:loading="storeItems.items === null"
 				v-model:filters="filters"
 				filterDisplay="row"
+				:globalFilterFields="['name', 'shortName']"
 			>
+				<!-- HEADER -->
+				<template #header>
+					<div class="flex w-full justify-between">
+						<Button type="button" label="Clear filters" outlined @click="clearFilter()" />
+						<IconField iconPosition="left" class="flex justify-center items-center">
+							<InputIcon class="top-auto">
+								<i class="fa-solid fa-magnifying-glass" />
+							</InputIcon>
+							<InputText v-model="filters['global'].value" placeholder="Keyword search" />
+						</IconField>
+					</div>
+				</template>
 				<template #empty> No items found. </template>
 				<template #loading> Loading items data. Please wait. </template>
 				<!-- IMAGE -->
@@ -74,7 +64,7 @@ const filters = ref({
 						<img class="item-image" :src="`${slotProps.data.image8xLink}`" :alt="slotProps.data.image" />
 					</template>
 				</Column>
-				<!-- NAME -->
+				<!-- NAME + WIKI -->
 				<Column field="name" header="Name" style="min-width: 12rem">
 					<template #filter="{ filterModel, filterCallback }">
 						<InputText
@@ -84,6 +74,14 @@ const filters = ref({
 							class="p-column-filter"
 							placeholder="Search"
 						/>
+					</template>
+					<template #body="slotProps">
+						<div class="flex flex-col gap-1">
+							<span>{{ slotProps.data.name }}</span>
+							<a class="item-name-anchor" :href="slotProps.data.wikiLink" target="_blank" rel="noopener noreferrer">
+								(wiki)
+							</a>
+						</div>
 					</template>
 				</Column>
 				<!-- SHORTNAME -->
@@ -170,5 +168,10 @@ const filters = ref({
 	justify-content: start;
 	align-items: end;
 	padding: 5px;
+}
+
+.item-name-anchor {
+	text-decoration: none;
+	color: #9fa8da;
 }
 </style>

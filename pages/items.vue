@@ -75,38 +75,38 @@ const filters = ref({
 					</template>
 				</Column>
 				<!-- NAME -->
-				<Column field="name" header="Name">
+				<Column field="name" header="Name" style="min-width: 12rem">
 					<template #filter="{ filterModel, filterCallback }">
 						<InputText
 							v-model="filterModel.value"
 							type="text"
 							@input="filterCallback()"
 							class="p-column-filter"
-							placeholder="Search by Name"
+							placeholder="Search"
 						/>
 					</template>
 				</Column>
 				<!-- SHORTNAME -->
-				<Column field="shortName" header="Short name">
+				<Column field="shortName" header="Short name" style="min-width: 12rem">
 					<template #filter="{ filterModel, filterCallback }">
 						<InputText
 							v-model="filterModel.value"
 							type="text"
 							@input="filterCallback()"
 							class="p-column-filter"
-							placeholder="Search by short name"
+							placeholder="Search"
 						/>
 					</template>
 				</Column>
 				<!-- WEIGHT -->
-				<Column field="weight" sortable header="Weight">
+				<Column field="weight" sortable header="Weight" style="min-width: 12rem">
 					<template #filter="{ filterModel, filterCallback }">
 						<InputText
 							v-model="filterModel.value"
 							type="number"
 							@input="filterCallback()"
 							class="p-column-filter"
-							placeholder="Search by weight"
+							placeholder="Search"
 						/>
 					</template>
 				</Column>

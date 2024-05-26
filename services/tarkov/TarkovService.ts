@@ -1,5 +1,6 @@
 import { request, gql } from "graphql-request";
-import type { IGetItemsResponse } from "./types";
+import type { IGetItemsResponse } from "./types/IItem";
+import type { IGetTradersResponse } from "./types/ITrader";
 
 export class TarkovService {
 	static QUERY_ALL_ITEMS = gql`
@@ -30,6 +31,22 @@ export class TarkovService {
 		}
 	`;
 
+	static QUERY_ALL_TRADERS = gql`
+		query {
+			traders {
+				name
+				normalizedName
+				imageLink
+				image4xLink
+				currency {
+					name
+					normalizedName
+					shortName
+				}
+			}
+		}
+	`;
+
 	public static async getAllItems(): Promise<IGetItemsResponse> {
 		const response = await request<IGetItemsResponse>("https://api.tarkov.dev/graphql", this.QUERY_ALL_ITEMS);
 
@@ -42,5 +59,9 @@ export class TarkovService {
 		});
 
 		return response;
+	}
+
+	public static async getAllTraders(): Promise<IGetTradersResponse> {
+		return await request("https://api.tarkov.dev/graphql", this.QUERY_ALL_TRADERS);
 	}
 }

@@ -4,26 +4,24 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 * {
-  margin: 0;
-  font-family: "Bender EFT";
-  font-weight: normal;
+	margin: 0;
+	font-family: "Bender EFT";
+	font-weight: normal;
 }
 
 body {
-  background-image: url("~/assets/images/eft_background.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
+	background-image: url("~/assets/images/eft_background.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-attachment: fixed;
 }
 
 /* 
 PRIMEVUE
 */
-.p-dialog-header {
+/* .p-dialog-header {
   transform: translateY(30px);
   background: rgb(255, 255, 255, 0);
   z-index: 9999;
@@ -48,13 +46,13 @@ PRIMEVUE
 
 .p-dialog {
   box-shadow: none;
-}
+} */
 
-[data-p-index="0"] {
+/* [data-p-index="0"] {
   color: rgb(6, 221, 6);
-}
+} */
 
-.p-autocomplete-panel.p-component.p-ripple-disabled {
+/* .p-autocomplete-panel.p-component.p-ripple-disabled {
   border: 1px solid rgb(91, 93, 91);
   color: white;
   background-color: rgba(31, 31, 31, 0.693);
@@ -96,4 +94,4 @@ PRIMEVUE
 
 .p-virtualscroller {
   height: 100% !important;
-}
+} */

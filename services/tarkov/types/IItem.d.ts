@@ -15,7 +15,15 @@ export interface IItem {
 	inspectImageLink: string;
 	avg24hPrice: null | number;
 	link: string;
-	sellFor: ISellFor[];
+	sellFor: {
+		price: number;
+		currency: string;
+		priceRUB: number;
+		vendor: {
+			name: string;
+			normalizedName: string;
+		};
+	}[];
 }
 
 export interface ISellFor {

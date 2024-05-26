@@ -1,9 +1,7 @@
 <script setup lang="ts">
-
 const props = defineProps<{
 	show: boolean;
 }>();
-
 </script>
 
 <template>
@@ -11,7 +9,6 @@ const props = defineProps<{
 		<span class="loader"></span>
 	</div>
 </template>
-
 
 <style scoped>
 .base-spinner {
@@ -29,7 +26,6 @@ const props = defineProps<{
 	background-color: rgba(0, 0, 0, 0.369);
 	backdrop-filter: blur(3px);
 }
-
 
 .loader {
 	width: 48px;

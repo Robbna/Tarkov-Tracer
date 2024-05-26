@@ -27,7 +27,7 @@ const zoom = (e: MouseEvent) => {
 	<div class="image-wrapper">
 		<figure
 			class="zoom"
-			:style="{ backgroundImage: `url(${props.url})`, backgroundSize: `${props.zoomIn*100}px` }"
+			:style="{ backgroundImage: `url(${props.url})`, backgroundSize: `${props.zoomIn * 100}px` }"
 			@mousemove="zoom"
 		>
 			<img draggable="false" :src="props.url" :alt="props.alt" />

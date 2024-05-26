@@ -16,14 +16,12 @@ onMounted(() => {
 <template>
 	<footer class="flex flex-col gap-3 text-center pt-20 pb-6">
 		<p class="current-date">
-			Game content and materials are trademarks and copyrights of Battlestate
-			Games and its licensors. All rights reserved.
+			Game content and materials are trademarks and copyrights of Battlestate Games and its licensors. All rights
+			reserved.
 		</p>
 		<p>
 			version :
-			<a :href="`${REPO_COMMIT_URL}${LAST_COMMIT_ID}`">{{
-				LAST_COMMIT_ID?.slice(0, 7)
-			}}</a>
+			<a :href="`${REPO_COMMIT_URL}${LAST_COMMIT_ID}`">{{ LAST_COMMIT_ID?.slice(0, 7) }}</a>
 		</p>
 	</footer>
 </template>

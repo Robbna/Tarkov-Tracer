@@ -1,31 +1,33 @@
 {
-  "name": "nuxt-app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "dependencies": {
-    "@pinia/nuxt": "^0.5.1",
-    "@vercel/analytics": "^1.2.2",
-    "@vercel/speed-insights": "^1.0.10",
-    "graphql": "^16.8.1",
-    "graphql-request": "^7.0.1",
-    "nuxt": "^3.11.2",
-    "pinia": "^2.1.7",
-    "primevue": "^3.52.0",
-    "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
-  },
-  "devDependencies": {
-    "@nuxtjs/device": "^3.1.1",
-    "autoprefixer": "^10.4.19",
-    "nuxt-primevue": "^0.3.1",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3"
-  }
+	"name": "nuxt-app",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare",
+		"format": "prettier --write ."
+	},
+	"dependencies": {
+		"@pinia/nuxt": "^0.5.1",
+		"@vercel/analytics": "^1.2.2",
+		"@vercel/speed-insights": "^1.0.10",
+		"graphql": "^16.8.1",
+		"graphql-request": "^7.0.1",
+		"nuxt": "^3.11.2",
+		"pinia": "^2.1.7",
+		"primevue": "^3.52.0",
+		"vue": "^3.4.27",
+		"vue-router": "^4.3.2"
+	},
+	"devDependencies": {
+		"@nuxtjs/device": "^3.1.1",
+		"autoprefixer": "^10.4.19",
+		"nuxt-primevue": "^0.3.1",
+		"postcss": "^8.4.38",
+		"prettier": "3.2.5",
+		"tailwindcss": "^3.4.3"
+	}
 }

@@ -4,7 +4,7 @@
 // https://pbs.twimg.com/media/Fldlm3HX0AEGhMn?format=jpg&name=large
 // =================================================================
 
-import type { IItem } from "~/services/tarkov/types";
+import type { IItem } from "~/services/tarkov/types/IItem";
 
 const props = defineProps<{
 	item: IItem;

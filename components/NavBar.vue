@@ -15,11 +15,21 @@ const ROUTER_LINKS = [
 		text: "Ammo",
 		icon: "fa-gun",
 	},
+	{
+		path: "/tasks",
+		text: "Tasks",
+		icon: "fa-list-check",
+	},
 ];
 </script>
 <template>
 	<nav class="navbar flex gap-2 items-center justify-center px-2">
-		<router-link v-for="(link, index) in ROUTER_LINKS" :key="index" :to="link.path">
+		<router-link
+			v-for="(link, index) in ROUTER_LINKS"
+			:key="index"
+			:to="link.path"
+			class="flex flex-col items-center justify-center h-full"
+		>
 			<span>
 				<i :class="`fa-solid ${link.icon}`" />
 				{{ link.text }}

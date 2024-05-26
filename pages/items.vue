@@ -27,6 +27,28 @@ const clearFilter = () => {
 };
 
 initFilters();
+
+if (process.client) {
+	const isKeyPressed: { [key: string]: boolean } = {
+		Control: false,
+		l: false,
+	};
+
+	document.onkeydown = (keyDownEvent: KeyboardEvent): void => {
+		isKeyPressed[keyDownEvent.key] = true;
+
+		if (isKeyPressed["Control"] && isKeyPressed["l"]) {
+			keyDownEvent.preventDefault();
+			clearFilter();
+		}
+	};
+
+	document.onkeyup = (keyUpEvent: KeyboardEvent): void => {
+		keyUpEvent.preventDefault();
+
+		isKeyPressed[keyUpEvent.key] = false;
+	};
+}
 </script>
 
 <template>
@@ -46,8 +68,12 @@ initFilters();
 			>
 				<!-- HEADER -->
 				<template #header>
-					<div class="flex w-full justify-between">
-						<Button type="button" label="Clear filters" outlined @click="clearFilter()" />
+					<div class="flex w-full justify-between items-center h-full">
+						<Button type="button" outlined @click="clearFilter()" class="flex items-center justify-center h-full gap-3">
+							<span class="label-clear h-full">Clear filters</span>
+							<span class="label-shortcut h-full">Ctrl + L</span>
+						</Button>
+						<h1 v-if="storeItems.items">{{ storeItems.items.length }} items loaded</h1>
 						<IconField iconPosition="left" class="flex justify-center items-center">
 							<InputIcon class="top-auto">
 								<i class="fa-solid fa-magnifying-glass" />
@@ -138,6 +164,16 @@ initFilters();
 </template>
 
 <style scoped>
+.label-clear {
+	font-size: 1.2rem;
+	font-weight: 600;
+}
+
+.label-shortcut {
+	font-size: 0.8rem;
+	font-weight: 100;
+}
+
 .item-image {
 	width: 120px;
 	height: 120px;

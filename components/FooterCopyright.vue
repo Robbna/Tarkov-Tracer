@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const GITHUB_URL = "https://github.com/Robbna?tab=repositories";
 
-const REPO_COMMIT_URL = "https://github.com/Robbna/TarkovTracer/commit/";
+const REPO_COMMIT_URL = "https://github.com/Robbna/Tarkovpedia/commit/";
 
 const LAST_COMMIT_ID = ref<string | null>(null);
 
 onMounted(() => {
-	fetch("https://api.github.com/repos/Robbna/tarkovtracer/commits")
+	fetch("https://api.github.com/repos/Robbna/tarkovpedia/commits")
 		.then((response) => response.json())
 		.then((data) => {
 			LAST_COMMIT_ID.value = data[0].sha;

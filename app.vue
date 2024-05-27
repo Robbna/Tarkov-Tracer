@@ -4,7 +4,7 @@ import { useItems } from "~/stores/items/Items";
 import { useTraders } from "~/stores/traders/Traders";
 
 useHead({
-	title: "Tarkov Tracer",
+	title: "Tarkovpedia",
 	link: [
 		{
 			rel: "stylesheet",

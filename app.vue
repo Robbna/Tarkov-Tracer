@@ -11,18 +11,6 @@ useHead({
 			href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css",
 		},
 	],
-	script: [
-		{
-			src: "https://www.googletagmanager.com/gtag/js?id=G-YTNP4RYFY1",
-		},
-		{
-			children: `window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-YTNP4RYFY1');`,
-		},
-	],
 });
 
 const storeItems = useItems();

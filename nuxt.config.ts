@@ -3,13 +3,21 @@ export default defineNuxtConfig({
 	devtools: {
 		enabled: true,
 	},
+	modules: ["nuxt-primevue", "@pinia/nuxt", "@nuxtjs/device", "nuxt-gtag"],
 	css: ["~/assets/css/main.css"],
-	modules: ["nuxt-primevue", "@pinia/nuxt", "@nuxtjs/device"],
-	plugins: ["~/plugins/analytics.ts"],
+	// TAILWIND CSS
 	postcss: {
 		plugins: {
 			tailwindcss: {},
 			autoprefixer: {},
 		},
+	},
+	plugins: [
+		// VERCEL ANALYTICS
+		"~/plugins/analytics.ts"
+	],
+	// GOOGLE ANALYTICS
+	gtag: {
+		id: "G-YTNP4RYFY1",
 	},
 });

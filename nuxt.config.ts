@@ -3,7 +3,15 @@ export default defineNuxtConfig({
 	devtools: {
 		enabled: true,
 	},
-	modules: ["nuxt-primevue", "@pinia/nuxt", "@nuxtjs/device", "nuxt-gtag"],
+	runtimeConfig: {
+		public: {
+			gtagId: "G-YTNP4RYFY1",
+		},
+	},
+	plugins: [
+		"~/plugins/gtag.client.js",
+	],
+	modules: ["nuxt-primevue", "@pinia/nuxt", "@nuxtjs/device"],
 	css: ["~/assets/css/main.css"],
 	// TAILWIND CSS
 	postcss: {
@@ -11,9 +19,5 @@ export default defineNuxtConfig({
 			tailwindcss: {},
 			autoprefixer: {},
 		},
-	},
-	// GOOGLE ANALYTICS
-	gtag: {
-		id: "G-YTNP4RYFY1",
 	},
 });

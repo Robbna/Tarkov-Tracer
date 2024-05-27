@@ -12,10 +12,6 @@ export default defineNuxtConfig({
 			autoprefixer: {},
 		},
 	},
-	plugins: [
-		// VERCEL ANALYTICS
-		"~/plugins/analytics.ts"
-	],
 	// GOOGLE ANALYTICS
 	gtag: {
 		id: "G-YTNP4RYFY1",

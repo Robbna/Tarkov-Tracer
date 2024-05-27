@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 import { useItems } from "~/stores/items/Items";
 import { useTraders } from "~/stores/traders/Traders";
 
@@ -22,7 +21,6 @@ onMounted(() => {
 </script>
 
 <template>
-	<SpeedInsights />
 	<main class="h-screen flex flex-col justify-between">
 		<NavBar />
 		<NuxtPage />

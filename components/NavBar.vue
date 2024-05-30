@@ -15,26 +15,27 @@ const ROUTER_LINKS = [
 		text: "Ammo",
 		icon: "fa-gun",
 	},
-	{
-		path: "/tasks",
-		text: "Tasks",
-		icon: "fa-list-check",
-	},
+	// {
+	// 	path: "/tasks",
+	// 	text: "Tasks",
+	// 	icon: "fa-list-check",
+	// },
 ];
 </script>
 <template>
 	<nav class="navbar flex gap-2 items-center justify-center px-2">
-		<router-link
-			v-for="(link, index) in ROUTER_LINKS"
-			:key="index"
-			:to="link.path"
-			class="flex flex-col items-center justify-center h-full"
-		>
+		<router-link v-for="(link, index) in ROUTER_LINKS" :key="index" :to="link.path" class="link">
 			<span>
 				<i :class="`fa-solid ${link.icon}`" />
 				{{ link.text }}
 			</span>
 		</router-link>
+		<a href="https://tarkovtracker.io/tasks" target="_blank" class="link">
+			<span>
+				<i class="fa-solid fa-list-check" />
+				Tasks
+			</span>
+		</a>
 	</nav>
 </template>
 
@@ -46,7 +47,7 @@ const ROUTER_LINKS = [
 	font-size: 1.8rem;
 }
 
-a {
+.link {
 	color: #f1f1f1;
 	text-decoration: none;
 	background-color: rgba(0, 0, 0, 0.26);
@@ -55,6 +56,10 @@ a {
 	border-bottom-right-radius: 5px;
 	overflow: hidden;
 	padding: 3px 1.4rem;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-items: center;
 	transition: all 0.1s;
 
 	&:hover {
@@ -68,7 +73,12 @@ a {
 	}
 }
 
-a:hover {
+.link:hover {
 	font-weight: bolder;
+}
+
+.span {
+	display: block;
+	height: 100%;
 }
 </style>

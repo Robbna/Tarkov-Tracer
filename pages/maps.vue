@@ -42,6 +42,25 @@ const MAPS_URL = [
 		url: "https://tarkov.dev/maps/factory-3d.jpg",
 		zoomIn: 30,
 	},
+	{
+		name: "Reserve",
+		id: "reserve",
+		url: "https://tarkov.dev/maps/reserve-3d.jpg",
+		zoomIn: 30,
+	},
+	{
+		name: "Labs",
+		id: "labs",
+		url: "https://tarkov.dev/maps/labs-2d.jpg",
+		zoomIn: 30,
+	},
+	{
+		name: "Streets of Tarkov",
+		id: "streets",
+		url: "https://tarkov.dev/maps/streets-3d.jpg",
+		zoomIn: 50,
+	},
+
 ];
 
 const route = useRoute();

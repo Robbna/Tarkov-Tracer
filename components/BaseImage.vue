@@ -1,57 +1,166 @@
 <script setup lang="ts">
+import { ref, computed, onMounted, watch } from "vue";
+import type { IImageData } from "~/pages/maps.vue";
+
 const props = defineProps<{
-	url: string;
-	alt: string;
+	mapData: IImageData;
 	zoomIn: number;
 }>();
 
-const zoom = (e: MouseEvent) => {
-	const zoomer = e.currentTarget as HTMLElement;
-	let offsetX, offsetY;
+const emit = defineEmits<{
+	(e: "@zoom-in" | "@zoom-out"): void;
+}>();
 
-	if ("offsetX" in e) {
-		offsetX = e.offsetX;
-		offsetY = e.offsetY;
-	} else {
-		const touchEvent = e as unknown as TouchEvent;
-		offsetX = touchEvent.touches[0].pageX;
-		offsetY = touchEvent.touches[0].pageY;
+const dragging = ref(false);
+const startX = ref(0);
+const startY = ref(0);
+const backgroundPosition = ref({ x: 50, y: 50 });
+
+const isFocus = ref(false);
+const isHover = ref(false);
+
+const showMessage = computed(() => isHover.value && !isFocus.value);
+const backgroundSize = computed(() => `${props.zoomIn}%`);
+
+const startDragging = (e: MouseEvent) => {
+	if (props.zoomIn <= 1) {
+		return;
 	}
 
-	const x = (offsetX / zoomer.offsetWidth) * 100;
-	const y = (offsetY / zoomer.offsetHeight) * 100;
-	zoomer.style.backgroundPosition = `${x}% ${y}%`;
+	dragging.value = true;
+	startX.value = e.pageX;
+	startY.value = e.pageY;
 };
+
+const handleDrag = (e: MouseEvent) => {
+	if (!dragging.value) return;
+
+	const zoomer = e.currentTarget as HTMLElement;
+	const deltaX = e.pageX - startX.value;
+	const deltaY = e.pageY - startY.value;
+
+	// Factor de ajuste para hacer el movimiento perceptible
+	const adjustmentFactor = 136;
+
+	const adjustedDeltaX = (deltaX / props.zoomIn) * adjustmentFactor;
+	const adjustedDeltaY = (deltaY / props.zoomIn) * adjustmentFactor;
+
+	const newX = backgroundPosition.value.x - (adjustedDeltaX / zoomer.offsetWidth) * 100;
+	const newY = backgroundPosition.value.y - (adjustedDeltaY / zoomer.offsetHeight) * 100;
+
+	// Limitar el rango de movimiento para no salirse de los bordes
+	backgroundPosition.value = {
+		x: Math.max(0, Math.min(100, newX)),
+		y: Math.max(0, Math.min(100, newY)),
+	};
+
+	zoomer.style.backgroundPosition = `${backgroundPosition.value.x}% ${backgroundPosition.value.y}%`;
+
+	startX.value = e.pageX;
+	startY.value = e.pageY;
+};
+
+const handleScroll = (e: WheelEvent) => {
+	if (isFocus.value) {
+		emit(e.deltaY > 0 ? "@zoom-out" : "@zoom-in");
+	}
+};
+
+watchEffect(() => {
+	if (isHover.value && isFocus.value) {
+		useScroll().disableScroll();
+	} else {
+		useScroll().enableScroll();
+	}
+});
+
+onMounted(() => {
+	backgroundPosition.value = { x: 50, y: 50 };
+
+	window.addEventListener("wheel", handleScroll);
+});
+
+onUnmounted(() => {
+	// window.removeEventListener("wheel", handleScroll);
+});
 </script>
+
 <template>
-	<div class="image-wrapper">
+	<div class="relative w-full">
 		<figure
-			class="zoom"
-			:style="{ backgroundImage: `url(${props.url})`, backgroundSize: `${props.zoomIn * 100}px` }"
-			@mousemove="zoom"
+			:class="{
+				zoom: true,
+				blur: showMessage,
+			}"
+			:style="{
+				backgroundImage: `url(${props.mapData.url})`,
+				backgroundSize: backgroundSize,
+				backgroundPosition: `${backgroundPosition.x}% ${backgroundPosition.y}%`,
+				aspectRatio: `${props.mapData.aspectRatio.width}/${props.mapData.aspectRatio.height}`,
+			}"
+			@mouseup="() => (dragging = false)"
+			@mousemove="
+				(e) => {
+					handleDrag(e);
+					isHover = true;
+				}
+			"
+			@mousedown="
+				(e) => {
+					startDragging(e);
+					isFocus = true;
+				}
+			"
+			@mouseleave="
+				() => {
+					dragging = false;
+					isHover = false;
+					isFocus = false;
+				}
+			"
+		/>
+		<div
+			v-show="showMessage"
+			class="not-draggable-message w-full text-center"
+			@mousemove="(e) => (isHover = true)"
+			@mousedown="(e) => (isFocus = true)"
 		>
-			<img draggable="false" :src="props.url" :alt="props.alt" />
-		</figure>
+			<h2>Click and scroll</h2>
+		</div>
 	</div>
 </template>
 
 <style scoped>
 figure.zoom {
-	position: relative;
 	width: 90vw;
 	max-width: 1500px;
+	height: 100%;
 	overflow: hidden;
-	cursor: zoom-in;
+	cursor: grab;
 	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	z-index: 5;
+
+	&.blur {
+		filter: blur(3px);
+	}
 }
 
-figure.zoom img {
-	display: block;
-	width: 100%;
-	transition: opacity 0.5s;
+figure.zoom:active {
+	cursor: grabbing;
 }
 
-figure.zoom img:hover {
-	opacity: 0;
+.not-draggable-message {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 10;
+}
+
+.not-draggable-message h2 {
+	font-size: 2rem;
+	text-shadow: 0 0 15px var(--primary);
+	text-shadow: 0 0 6px var(--bg-primary);
 }
 </style>

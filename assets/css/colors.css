@@ -1,0 +1,10 @@
+:root {
+	--primary: #9a8866;
+	--secondary: #f0f0f0;
+	--bg-primary: #0e0e0e;
+	--bg-secondary: rgb(31, 31, 31);
+
+	/* Text colors */
+	--text-primary: #aeaeb0;
+	--text-secondary: #000000;
+}

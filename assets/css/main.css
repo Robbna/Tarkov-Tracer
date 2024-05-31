@@ -1,5 +1,6 @@
 @import url("primevue/resources/themes/mdc-dark-indigo/theme.css");
 @import url("./fonts.css");
+@import url("./colors.css");
 
 @tailwind components;
 @tailwind utilities;
@@ -18,12 +19,36 @@ body {
 	background-attachment: fixed;
 }
 
+/* width */
+body::-webkit-scrollbar {
+	width: 16px;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+	background: inherit;
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+	background: #555;
+}
+
+[debug] {
+	outline: 4px dashed hsl(320 100% 50%);
+}
+
 /* 
 PRIMEVUE
 */
-.p-datatable .p-datatable-tbody > tr:not(.p-highlight):focus {
-	background-color: #1e1e1e;
+
+.p-scrolltop.p-link {
+	background-color: #f1f1f1;
 }
+
+/* .p-datatable .p-datatable-tbody>tr:not(.p-highlight):focus {
+  background-color: #1e1e1e;
+} */
 
 /* .p-dialog-header {
   transform: translateY(30px);

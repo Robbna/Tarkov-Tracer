@@ -10,11 +10,11 @@ const ROUTER_LINKS = [
 		text: "Maps",
 		icon: "fa-map",
 	},
-	{
-		path: "/ammo",
-		text: "Ammo",
-		icon: "fa-gun",
-	},
+	// {
+	// 	path: "/ammo",
+	// 	text: "Ammo",
+	// 	icon: "fa-gun",
+	// },
 	// {
 	// 	path: "/tasks",
 	// 	text: "Tasks",

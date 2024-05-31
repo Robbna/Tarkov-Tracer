@@ -21,7 +21,8 @@ onMounted(() => {
 </script>
 
 <template>
-	<main class="h-screen flex flex-col justify-between">
+	<ScrollTop />
+	<main class="h-screen flex flex-col justify-between gap-9">
 		<NavBar />
 		<NuxtPage />
 		<FooterCopyright />

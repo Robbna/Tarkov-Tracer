@@ -52,9 +52,14 @@ if (process.client) {
 </script>
 
 <template>
-	<main class="flex flex-col items-center justify-center gap-9 mt-9">
+	<main class="flex flex-col items-center justify-center gap-9">
 		<section class="w-[80%] flex flex-col gap-3">
+			<div v-if="storeItems.isLoading" class="flex flex-col gap-3">
+				<Skeleton height="50px" />
+				<Skeleton height="450px" />
+			</div>
 			<DataTable
+				v-if="!storeItems.isLoading"
 				:value="storeItems.items"
 				scrollable
 				removableSort
@@ -83,7 +88,6 @@ if (process.client) {
 					</div>
 				</template>
 				<template #empty> No items found. </template>
-				<template #loading> Loading items data. Please wait. </template>
 				<!-- IMAGE -->
 				<Column header="Image">
 					<template #body="slotProps">

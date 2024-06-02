@@ -5,11 +5,12 @@ export const useItems = defineStore("items", () => {
 	const items = ref<IItem[] | null>(null);
 	const isLoading = ref(true);
 
-	const fetchItems = async () => {
+	const fetchItems = () => {
 		isLoading.value = true;
-		await TarkovService.getAllItems()
+		TarkovService.getAllItems()
 			.then((response) => {
 				items.value = response.items.map((item: IItem) => {
+					item.sellFor = item.sellFor.filter((sell) => sell.vendor.name !== "Flea Market");
 					item.sellFor = item.sellFor.sort((a, b) => b.priceRUB - a.priceRUB);
 					return item;
 				});

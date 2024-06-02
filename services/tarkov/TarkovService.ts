@@ -1,6 +1,9 @@
 import { request, gql } from "graphql-request";
-import type { IGetItemsResponse } from "./types/IItem";
-import type { IGetTradersResponse } from "./types/ITrader";
+import type { IGetItemsResponse } from "./types/responses/IGetItemResponse";
+import type { IGetTradersResponse } from "./types/responses/IGetTradersResponse";
+import type { IGetBestHeadsets } from "./types/responses/IGetBestHeadsets";
+
+import HeadsetsJSON from "../data/headsets.json";
 
 export class TarkovService {
 	static QUERY_ALL_ITEMS = gql`
@@ -49,20 +52,17 @@ export class TarkovService {
 	`;
 
 	public static async getAllItems(): Promise<IGetItemsResponse> {
-		const response = await request<IGetItemsResponse>("https://api.tarkov.dev/graphql", this.QUERY_ALL_ITEMS);
-
-		// Remove "Flea Market" vendor from sellFor array
-		response.items = response.items.map((item) => {
-			return {
-				...item,
-				sellFor: item.sellFor.filter((sell) => sell.vendor.name !== "Flea Market"),
-			};
-		});
-
-		return response;
+		return await request("https://api.tarkov.dev/graphql", this.QUERY_ALL_ITEMS);
 	}
 
 	public static async getAllTraders(): Promise<IGetTradersResponse> {
 		return await request("https://api.tarkov.dev/graphql", this.QUERY_ALL_TRADERS);
+	}
+
+	public static async getBestHeadsets(): Promise<IGetBestHeadsets> {
+		const response: IGetBestHeadsets = {
+			headsets: HeadsetsJSON,
+		};
+		return response;
 	}
 }

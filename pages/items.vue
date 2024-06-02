@@ -61,11 +61,13 @@ if (process.client) {
 			<DataTable
 				v-if="!storeItems.isLoading"
 				:value="storeItems.items"
-				scrollable
 				removableSort
-				scrollHeight="800px"
-				:virtualScrollerOptions="{ itemSize: 36 }"
 				showGridlines
+				scrollable
+				scrollHeight="1000px"
+				paginator
+				:rows="5"
+				:rowsPerPageOptions="[5, 10, 20, 50]"
 				:loading="storeItems.items === null"
 				v-model:filters="filters"
 				filterDisplay="row"
@@ -91,7 +93,7 @@ if (process.client) {
 				<!-- IMAGE -->
 				<Column header="Image">
 					<template #body="slotProps">
-						<img class="item-image" :src="`${slotProps.data.image8xLink}`" :alt="slotProps.data.image" />
+						<img loading="lazy" class="item-image" :src="`${slotProps.data.image8xLink}`" :alt="slotProps.data.image" />
 					</template>
 				</Column>
 				<!-- NAME + WIKI -->
@@ -144,7 +146,9 @@ if (process.client) {
 						<div class="flex gap-2">
 							<div class="trader-wrapper" v-for="trader in slotProps.data.sellFor" :key="trader.vendor.normalizedName">
 								<img
+									loading="lazy"
 									class="item-image"
+									:alt="trader.vendor.normalizedName"
 									:src="`${
 										storeTraders.traders?.find((t) => t.normalizedName === trader.vendor.normalizedName)?.image4xLink
 									}`"
@@ -168,6 +172,32 @@ if (process.client) {
 </template>
 
 <style scoped>
+:deep(.p-paginator) {
+	justify-content: center;
+}
+
+/* 
+SCROLLBAR
+*/
+:deep(.p-datatable-wrapper)::-webkit-scrollbar {
+	height: 6px;
+}
+
+:deep(.p-datatable-wrapper)::-webkit-scrollbar-track {
+	background: rgb(30, 30, 30);
+}
+
+:deep(.p-datatable-wrapper)::-webkit-scrollbar-thumb {
+	background: #555;
+}
+
+/* 
+BACKGROUND COLOR FOR SELECTED ROW
+*/
+:deep(.p-datatable .p-datatable-tbody > tr) {
+	background: rgb(30, 30, 30);
+}
+
 .label-clear {
 	font-size: 1.2rem;
 	font-weight: 600;

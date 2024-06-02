@@ -6,36 +6,36 @@
 @tailwind utilities;
 
 * {
-	margin: 0;
-	font-family: "Bender EFT";
-	font-weight: normal;
+  margin: 0;
+  font-family: "Bender EFT";
+  font-weight: normal;
 }
 
 body {
-	background-image: url("~/assets/images/eft_background.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-attachment: fixed;
-}
-
-/* width */
-body::-webkit-scrollbar {
-	width: 16px;
-}
-
-/* Track */
-body::-webkit-scrollbar-track {
-	background: inherit;
-}
-
-/* Handle */
-body::-webkit-scrollbar-thumb {
-	background: #555;
+  background-image: url("~/assets/images/eft_background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
 }
 
 [debug] {
-	outline: 4px dashed hsl(320 100% 50%);
+  outline: 4px dashed hsl(320 100% 50%);
+}
+
+/* 
+SCROLLBAR
+*/
+body::-webkit-scrollbar {
+  width: 16px;
+}
+
+body::-webkit-scrollbar-track {
+  background: inherit;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #555;
 }
 
 /* 
@@ -43,7 +43,7 @@ PRIMEVUE
 */
 
 .p-scrolltop.p-link {
-	background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 /* .p-datatable .p-datatable-tbody>tr:not(.p-highlight):focus {

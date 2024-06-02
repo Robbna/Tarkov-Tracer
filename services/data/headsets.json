@@ -1,0 +1,88 @@
+[
+	{
+		"rank": 1,
+		"name": "Peltor ComTac 4 Hybrid",
+		"walk": 87,
+		"running": 90,
+		"inspectImageLink": "https://assets.tarkov.dev/628e4e576d783146b124c64d-image.webp",
+		"shortName": "ComTac 4"
+	},
+	{
+		"rank": 2,
+		"name": "Peltor ComTac 4",
+		"walk": 76,
+		"running": 84,
+		"inspectImageLink": "https://assets.tarkov.dev/628e4e576d783146b124c64d-image.webp",
+		"shortName": "ComTac 4"
+	},
+	{
+		"rank": 3,
+		"name": "Ops-Core FAST RAC",
+		"walk": 71,
+		"running": 73,
+		"inspectImageLink": "https://assets.tarkov.dev/5a16b9fffcdbcb0176308b34-image.webp",
+		"shortName": "RAC"
+	},
+	{
+		"rank": 4,
+		"name": "Walker's XCEL 500BT",
+		"walk": 69,
+		"running": 75,
+		"inspectImageLink": "https://assets.tarkov.dev/5f60cd6cf2bcbb675b00dac6-image.webp",
+		"shortName": "XCEL"
+	},
+	{
+		"rank": 5,
+		"name": "Peltor Tactical Sport",
+		"walk": 65,
+		"running": 70,
+		"inspectImageLink": "https://assets.tarkov.dev/5c165d832e2216398b5a7e36-image.webp",
+		"shortName": "Tactical Sport"
+	},
+	{
+		"rank": 6,
+		"name": "MSA Sordin Supreme",
+		"walk": 63,
+		"running": 66,
+		"inspectImageLink": "https://assets.tarkov.dev/5aa2ba71e5b5b000137b758f-image.webp",
+		"shortName": "Sordin"
+	},
+	{
+		"rank": 7,
+		"name": "Walker's Razor",
+		"walk": 62,
+		"running": 69,
+		"inspectImageLink": "https://assets.tarkov.dev/5e4d34ca86f774264f758330-image.webp",
+		"shortName": "Razor"
+	},
+	{
+		"rank": 8,
+		"name": "OPSMEN Earmor M32",
+		"walk": 59,
+		"running": 64,
+		"inspectImageLink": "https://assets.tarkov.dev/6033fa48ffd42c541047f728-image.webp",
+		"shortName": "M32"
+	},
+	{
+		"rank": 9,
+		"name": "Peltor ComTac 2",
+		"walk": 55,
+		"running": 60,
+		"inspectImageLink": "https://assets.tarkov.dev/5645bcc04bdc2d363b8b4572-image.webp",
+		"shortName": "ComTac 2"
+	},
+	{
+		"rank": 10,
+		"name": "GSSH-01 active headset",
+		"walk": 53,
+		"running": 59,
+		"inspectImageLink": "https://assets.tarkov.dev/5b432b965acfc47a8774094e-image.webp",
+		"shortName": "GSSh-01"
+	},
+	{
+		"rank": 11,
+		"name": "NO HEADSET",
+		"walk": 47,
+		"running": 52
+	}
+]

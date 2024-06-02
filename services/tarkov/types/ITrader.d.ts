@@ -1,7 +1,3 @@
-export interface IGetTradersResponse {
-	traders: ITrader[];
-}
-
 export interface ITrader {
 	name: string;
 	normalizedName: string;

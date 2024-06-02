@@ -1,7 +1,3 @@
-export interface IGetItemsResponse {
-	items: IItem[];
-}
-
 export interface IItem {
 	id: string;
 	name: string;

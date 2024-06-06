@@ -12,7 +12,6 @@ export const useTraders = defineStore("traders", () => {
 				}
 				return trader;
 			});
-			console.log(traders.value);
 		});
 	};
 

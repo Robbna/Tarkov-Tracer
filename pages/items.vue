@@ -72,7 +72,6 @@ if (process.client) {
 				scrollHeight="1000px"
 				paginator
 				:rows="5"
-				:loading="storeItems.items === null"
 				v-model:filters="filters"
 				filterDisplay="row"
 				:globalFilterFields="['name', 'shortName']"

@@ -32,7 +32,7 @@ const items = reactive<MenuItem[]>([
 ]);
 </script>
 <template>
-	<nav class="navbar flex gap-2 justify-center">
+	<nav class="navbar flex gap-2 justify-center mb-12">
 		<Menubar class="w-full prime-menubar" :model="items">
 			<template #item="{ item, props, hasSubmenu }">
 				<router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>

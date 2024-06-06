@@ -45,6 +45,9 @@ img {
 	width: 100%;
 	min-width: 60px;
 	max-width: 1200px;
+	object-fit: contain;
+
+	max-height: 900px;
 }
 
 span {

@@ -1,35 +1,54 @@
 <script setup lang="ts">
-const ROUTER_LINKS = [
+import type { MenuItem } from "primevue/menuitem";
+import { useMaps } from "~/stores/maps/Maps";
+
+const storeMaps = useMaps();
+
+const items = reactive<MenuItem[]>([
 	{
-		path: "/items",
-		text: "Items",
+		label: "Items",
 		icon: "fa-vest",
+		route: "/items",
 	},
 	{
-		path: "/maps",
-		text: "Maps",
+		label: "Maps",
 		icon: "fa-map",
+		items: storeMaps.maps.map((map) => ({
+			label: map.name,
+			route: `/maps/${map.id}`,
+		})),
 	},
 	{
-		path: "/tiers",
-		text: "Tiers",
-		icon: "fa-ranking-star"
+		label: "Tiers",
+		icon: "fa-ranking-star",
+		route: "/tiers",
 	},
-	// {
-	// 	path: "/ammo",
-	// 	text: "Ammo",
-	// 	icon: "fa-gun",
-	// },
-	// {
-	// 	path: "/tasks",
-	// 	text: "Tasks",
-	// 	icon: "fa-list-check",
-	// },
-];
+	{
+		label: "Tasks",
+		icon: "fa-list-check",
+		url: "https://tarkovtracker.io/tasks",
+		target: "_blank",
+	},
+]);
 </script>
 <template>
-	<nav class="navbar flex gap-2 items-center justify-center px-2">
-		<router-link v-for="(link, index) in ROUTER_LINKS" :key="index" :to="link.path" class="link">
+	<nav class="navbar flex gap-2 justify-center">
+		<Menubar class="w-full prime-menubar" :model="items">
+			<template #item="{ item, props, hasSubmenu }">
+				<router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+					<a v-ripple :href="href" v-bind="props.action" @click="navigate">
+						<i :class="`fa-solid ${item.icon}`" />
+						<span class="ml-2">{{ item.label }}</span>
+					</a>
+				</router-link>
+				<a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+					<i :class="`fa-solid ${item.icon}`" />
+					<span class="ml-2">{{ item.label }}</span>
+					<span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
+				</a>
+			</template>
+		</Menubar>
+		<!-- <router-link v-for="(link, index) in ROUTER_LINKS" :key="index" :to="link.path" class="link">
 			<span>
 				<i :class="`fa-solid ${link.icon}`" />
 				{{ link.text }}
@@ -40,7 +59,7 @@ const ROUTER_LINKS = [
 				<i class="fa-solid fa-list-check" />
 				Tasks
 			</span>
-		</a>
+		</a> -->
 	</nav>
 </template>
 
@@ -52,38 +71,10 @@ const ROUTER_LINKS = [
 	font-size: 1.8rem;
 }
 
-.link {
-	color: #f1f1f1;
-	text-decoration: none;
+.prime-menubar {
+	border: none;
+	border-radius: 0;
 	background-color: rgba(0, 0, 0, 0.26);
 	backdrop-filter: blur(6px);
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	overflow: hidden;
-	padding: 3px 1.4rem;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-items: center;
-	transition: all 0.1s;
-
-	&:hover {
-		background-color: rgb(231, 232, 235);
-		color: rgb(42, 47, 63);
-	}
-
-	& span {
-		display: block;
-		/* transform: skew(-45deg); */
-	}
-}
-
-.link:hover {
-	font-weight: bolder;
-}
-
-.span {
-	display: block;
-	height: 100%;
 }
 </style>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IImageData } from "~/pages/maps.vue";
+import type { IMap } from "~/services/tarkov/types/IMap";
 
 const props = defineProps<{
-	mapData: IImageData;
+	mapData: IMap;
 }>();
 
 const route = useRoute();
@@ -76,18 +76,10 @@ button {
 	font-size: 1.5rem;
 }
 
-.input-range-wrapper {
-	/* background-color: var(--bg-secondary); */
-	/* padding: 9px; */
-}
-
 input[type="range"] {
 	height: 2px;
 	appearance: none;
-	/* background: var(--bg-primary); */
 	background: #f1f1f1;
-}
-input[type="range"]:focus {
 }
 input[type="range"]::-webkit-slider-runnable-track {
 	width: 100%;
@@ -101,7 +93,5 @@ input[type="range"]::-webkit-slider-thumb {
 	box-shadow: 0 0 3px var(--bg-primary);
 	cursor: pointer;
 	appearance: none;
-}
-input[type="range"]:focus::-webkit-slider-runnable-track {
 }
 </style>

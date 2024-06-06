@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import type { IImageData } from "~/pages/maps.vue";
+import type { IMap } from "~/services/tarkov/types/IMap";
 
 const props = defineProps<{
-	mapData: IImageData;
+	mapData: IMap;
 	zoomIn: number;
 }>();
 
@@ -81,7 +81,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-	// window.removeEventListener("wheel", handleScroll);
+	window.removeEventListener("wheel", handleScroll);
 });
 </script>
 
@@ -93,7 +93,7 @@ onUnmounted(() => {
 				blur: showMessage,
 			}"
 			:style="{
-				backgroundImage: `url(${props.mapData.url})`,
+				backgroundImage: `url(${props.mapData.imageUrl})`,
 				backgroundSize: backgroundSize,
 				backgroundPosition: `${backgroundPosition.x}% ${backgroundPosition.y}%`,
 				aspectRatio: `${props.mapData.aspectRatio.width}/${props.mapData.aspectRatio.height}`,

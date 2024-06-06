@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useItems } from "~/stores/items/Items";
 import { useTraders } from "~/stores/traders/Traders";
+import { useMaps } from "~/stores/maps/Maps";
 
 useHead({
 	title: "Tarkovpedia",
@@ -14,24 +15,22 @@ useHead({
 
 const storeItems = useItems();
 const storeTraders = useTraders();
+const storeMaps = useMaps();
 
 onMounted(() => {
-	Promise.all([storeItems.fetchItems(), storeTraders.fetchTraders()]);
+	storeItems.fetchItems();
+	storeTraders.fetchTraders();
+	storeMaps.fetchMaps();
 });
 </script>
 
 <template>
 	<ScrollTop />
-	<main class="h-screen flex flex-col justify-between gap-9">
+	<main class="h-screen flex flex-col justify-between">
 		<NavBar />
 		<NuxtPage />
 		<FooterCopyright />
 	</main>
 </template>
 
-<style scoped>
-.message-wrapper {
-	width: 100%;
-	max-width: 49rem;
-}
-</style>
+<style scoped></style>

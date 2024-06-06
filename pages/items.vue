@@ -72,7 +72,6 @@ if (process.client) {
 				scrollHeight="1000px"
 				paginator
 				:rows="5"
-				:rowsPerPageOptions="[5, 10, 20, 50]"
 				:loading="storeItems.items === null"
 				v-model:filters="filters"
 				filterDisplay="row"
@@ -158,9 +157,8 @@ if (process.client) {
 										storeTraders.traders?.find((t) => t.normalizedName === trader.vendor.normalizedName)?.image4xLink
 									}`"
 								/>
-
 								<div class="trader-price flex gap-2">
-									<span class=""> {{ trader.price }}</span>
+									<span> {{ trader.price }}</span>
 									<span>
 										{{
 											storeTraders.traders?.find((t) => t.normalizedName === trader.vendor.normalizedName)?.currency

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted, watchEffect } from "vue";
 import type { IMap } from "~/services/tarkov/types/IMap";
 
 const props = defineProps<{
@@ -22,24 +22,40 @@ const isHover = ref(false);
 const showMessage = computed(() => isHover.value && !isFocus.value);
 const backgroundSize = computed(() => `${props.zoomIn}%`);
 
-const startDragging = (e: MouseEvent) => {
+const startDragging = (e: MouseEvent | TouchEvent) => {
 	if (props.zoomIn <= 1) {
 		return;
 	}
 
 	dragging.value = true;
-	startX.value = e.pageX;
-	startY.value = e.pageY;
+	if (e instanceof MouseEvent) {
+		startX.value = e.pageX;
+		startY.value = e.pageY;
+	} else if (e instanceof TouchEvent) {
+		startX.value = e.touches[0].pageX;
+		startY.value = e.touches[0].pageY;
+	}
 };
 
-const handleDrag = (e: MouseEvent) => {
-	if (!dragging.value) return;
+const handleDrag = (e: MouseEvent | TouchEvent) => {
+	if (!dragging.value) {
+		return;
+	}
+
+	let pageX;
+	let pageY;
+	if (e instanceof MouseEvent) {
+		pageX = e.pageX;
+		pageY = e.pageY;
+	} else if (e instanceof TouchEvent) {
+		pageX = e.touches[0].pageX;
+		pageY = e.touches[0].pageY;
+	}
 
 	const zoomer = e.currentTarget as HTMLElement;
-	const deltaX = e.pageX - startX.value;
-	const deltaY = e.pageY - startY.value;
+	const deltaX = pageX! - startX.value;
+	const deltaY = pageY! - startY.value;
 
-	// Factor de ajuste para hacer el movimiento perceptible
 	const adjustmentFactor = 136;
 
 	const adjustedDeltaX = (deltaX / props.zoomIn) * adjustmentFactor;
@@ -48,7 +64,6 @@ const handleDrag = (e: MouseEvent) => {
 	const newX = backgroundPosition.value.x - (adjustedDeltaX / zoomer.offsetWidth) * 100;
 	const newY = backgroundPosition.value.y - (adjustedDeltaY / zoomer.offsetHeight) * 100;
 
-	// Limitar el rango de movimiento para no salirse de los bordes
 	backgroundPosition.value = {
 		x: Math.max(0, Math.min(100, newX)),
 		y: Math.max(0, Math.min(100, newY)),
@@ -56,8 +71,8 @@ const handleDrag = (e: MouseEvent) => {
 
 	zoomer.style.backgroundPosition = `${backgroundPosition.value.x}% ${backgroundPosition.value.y}%`;
 
-	startX.value = e.pageX;
-	startY.value = e.pageY;
+	startX.value = pageX!;
+	startY.value = pageY!;
 };
 
 const handleScroll = (e: WheelEvent) => {
@@ -112,6 +127,25 @@ onUnmounted(() => {
 				}
 			"
 			@mouseleave="
+				() => {
+					dragging = false;
+					isHover = false;
+					isFocus = false;
+				}
+			"
+			@touchstart="
+				(e) => {
+					startDragging(e);
+					isFocus = true;
+				}
+			"
+			@touchmove="
+				(e) => {
+					handleDrag(e);
+					isHover = true;
+				}
+			"
+			@touchend="
 				() => {
 					dragging = false;
 					isHover = false;

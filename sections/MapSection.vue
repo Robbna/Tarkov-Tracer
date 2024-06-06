@@ -11,9 +11,8 @@ const customZoomIn = ref<string>("100");
 </script>
 <template>
 	<section class="flex flex-col gap-9 items-center">
-		<div class="w-full flex flex-col items-center gap-2">
+		<div class="w-full flex flex-col items-center gap-5">
 			<a class="flex items-center gap-3" :href="`${route.path}#${props.mapData.id}`">
-				<i class="fa-solid fa-link" />
 				<h2 class="text-4xl">{{ props.mapData.name }}</h2>
 			</a>
 			<div class="w-full flex flex-col gap-7">
@@ -81,11 +80,12 @@ input[type="range"] {
 	appearance: none;
 	background: #f1f1f1;
 }
+
 input[type="range"]::-webkit-slider-runnable-track {
 	width: 100%;
 	cursor: pointer;
-	padding: 3px;
 }
+
 input[type="range"]::-webkit-slider-thumb {
 	height: 30px;
 	width: 10px;

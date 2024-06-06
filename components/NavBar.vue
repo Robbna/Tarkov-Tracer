@@ -48,27 +48,21 @@ const items = reactive<MenuItem[]>([
 				</a>
 			</template>
 		</Menubar>
-		<!-- <router-link v-for="(link, index) in ROUTER_LINKS" :key="index" :to="link.path" class="link">
-			<span>
-				<i :class="`fa-solid ${link.icon}`" />
-				{{ link.text }}
-			</span>
-		</router-link>
-		<a href="https://tarkovtracker.io/tasks" target="_blank" class="link">
-			<span>
-				<i class="fa-solid fa-list-check" />
-				Tasks
-			</span>
-		</a> -->
 	</nav>
 </template>
 
 <style scoped>
+:deep(.p-submenu-list) {
+	font-size: 1rem;
+}
+
+:deep(.prime-menubar) {
+	font-size: 1.6rem;
+}
 .navbar {
 	position: sticky;
 	top: 0;
 	z-index: 100;
-	font-size: 1.8rem;
 }
 
 .prime-menubar {

@@ -4,7 +4,7 @@ import type { IGetTradersResponse } from "./types/responses/IGetTradersResponse"
 
 export class TarkovService {
 	static QUERY_ALL_ITEMS = gql`
-		{
+		query {
 			items {
 				avg24hPrice
 				basePrice
@@ -43,26 +43,6 @@ export class TarkovService {
 					name
 					normalizedName
 					shortName
-				}
-			}
-		}
-	`;
-
-	static QUERY_ALL_MAPS = gql`
-		query {
-			maps {
-				id
-				name
-				normalizedName
-				wiki
-				raidDuration
-				enemies
-				bosses {
-					boss {
-						id
-						name
-						normalizedName
-					}
 				}
 			}
 		}

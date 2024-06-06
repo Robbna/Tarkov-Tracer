@@ -6,6 +6,7 @@ import type { IItem } from "~/services/tarkov/types/IItem";
 
 const storeItems = useItems();
 const storeTraders = useTraders();
+const { isMobile, isDesktop } = useDevice();
 
 const filters = ref({
 	global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -72,6 +73,7 @@ if (process.client) {
 				scrollHeight="1000px"
 				paginator
 				:rows="5"
+				size="small"
 				v-model:filters="filters"
 				filterDisplay="row"
 				:globalFilterFields="['name', 'shortName']"
@@ -79,11 +81,17 @@ if (process.client) {
 				<!-- HEADER -->
 				<template #header>
 					<div class="flex w-full justify-between items-center h-full">
-						<Button type="button" outlined @click="clearFilter()" class="flex items-center justify-center h-full gap-3">
+						<Button
+							v-if="isDesktop"
+							type="button"
+							outlined
+							@click="clearFilter()"
+							class="flex items-center justify-center h-full gap-3"
+						>
 							<span class="label-clear h-full">Clear filters</span>
 							<span class="label-shortcut h-full">Ctrl + L</span>
 						</Button>
-						<h1 v-if="storeItems.items">{{ storeItems.items.length }} items loaded</h1>
+						<h1 v-if="isDesktop && storeItems.items">{{ storeItems.items.length }} items loaded</h1>
 						<IconField iconPosition="left" class="flex justify-center items-center">
 							<InputIcon class="top-auto">
 								<i class="fa-solid fa-magnifying-glass" />
@@ -120,7 +128,7 @@ if (process.client) {
 					</template>
 				</Column>
 				<!-- SHORTNAME -->
-				<Column field="shortName" header="Short name" style="min-width: 12rem">
+				<Column v-if="isDesktop" field="shortName" header="Short name" style="min-width: 12rem">
 					<template #filter="{ filterModel, filterCallback }">
 						<InputText
 							v-model="filterModel.value"
@@ -132,7 +140,7 @@ if (process.client) {
 					</template>
 				</Column>
 				<!-- WEIGHT -->
-				<Column field="weight" sortable header="Weight" style="min-width: 12rem">
+				<Column v-if="isDesktop" field="weight" sortable header="Weight" style="min-width: 12rem">
 					<template #filter="{ filterModel, filterCallback }">
 						<InputText
 							v-model="filterModel.value"
@@ -208,7 +216,6 @@ BACKGROUND COLOR FOR SELECTED ROW
 
 .label-shortcut {
 	font-size: 0.8rem;
-	font-weight: 100;
 }
 
 .item-image {

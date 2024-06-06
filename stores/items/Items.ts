@@ -10,7 +10,12 @@ export const useItems = defineStore("items", () => {
 		TarkovService.getAllItems()
 			.then((response) => {
 				items.value = response.items.map((item: IItem) => {
-					item.sellFor = item.sellFor.filter((sell) => sell.vendor.name !== "Flea Market");
+					// item.sellFor = item.sellFor.filter((sell) => sell.vendor.name !== "Flea Market");
+					// item.sellFor.map((sell) => {
+					// 	if (sell.vendor.normalizedName === "fleamarket") {
+					// 		sell.vendor.
+					// 	}
+					// });
 					item.sellFor = item.sellFor.sort((a, b) => b.priceRUB - a.priceRUB);
 					return item;
 				});

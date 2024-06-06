@@ -2,6 +2,7 @@
 import { useItems } from "~/stores/items/Items";
 import { FilterMatchMode } from "primevue/api";
 import { useTraders } from "~/stores/traders/Traders";
+import type { IItem } from "~/services/tarkov/types/IItem";
 
 const storeItems = useItems();
 const storeTraders = useTraders();
@@ -27,6 +28,10 @@ const clearFilter = () => {
 };
 
 initFilters();
+
+const isFleaMarket = (item: IItem): boolean => {
+	return item.sellFor.some((trader) => trader.vendor.normalizedName === "flea-market");
+};
 
 if (process.client) {
 	const isKeyPressed: { [key: string]: boolean } = {
@@ -153,6 +158,7 @@ if (process.client) {
 										storeTraders.traders?.find((t) => t.normalizedName === trader.vendor.normalizedName)?.image4xLink
 									}`"
 								/>
+
 								<div class="trader-price flex gap-2">
 									<span class=""> {{ trader.price }}</span>
 									<span>

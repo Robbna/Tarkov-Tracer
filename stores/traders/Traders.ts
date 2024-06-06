@@ -7,6 +7,12 @@ export const useTraders = defineStore("traders", () => {
 	const fetchTraders = () => {
 		TarkovService.getAllTraders().then((response) => {
 			traders.value = response.traders;
+			traders.value.map((trader) => {
+				if (trader.normalizedName === "btr-driver") {
+					trader.normalizedName = "flea-market";
+					trader.image4xLink = "/images/flea.svg";
+				}
+			});
 		});
 	};
 

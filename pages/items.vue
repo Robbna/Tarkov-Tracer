@@ -9,14 +9,12 @@ const storeTraders = useTraders();
 const { isMobile, isDesktop } = useDevice();
 
 const filters = ref({
-	global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 	shortName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 
 const initFilters = () => {
 	filters.value = {
-		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 		name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 		shortName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 	};
@@ -27,10 +25,8 @@ const showFlea = ref(true);
 const filteredItems = computed(() => {
 	return storeItems.items?.map((item) => {
 		if (showFlea.value) {
-			// Si isFiltered es false, devolver el item sin cambios
 			return item;
 		} else {
-			// Si isFiltered es true, eliminar el vendor con normalizedName "flea-market"
 			return {
 				...item,
 				sellFor: item.sellFor.filter((vendor) => vendor.vendor.normalizedName !== "flea-market"),
@@ -107,12 +103,6 @@ if (process.client) {
 							Show flea market
 							<InputSwitch v-model="showFlea" />
 						</label>
-						<IconField iconPosition="left" class="flex justify-center items-center">
-							<InputIcon class="top-auto">
-								<i class="fa-solid fa-magnifying-glass" />
-							</InputIcon>
-							<InputText v-model="filters['global'].value" placeholder="Keyword search" />
-						</IconField>
 					</div>
 				</template>
 				<template #empty> No items found. </template>

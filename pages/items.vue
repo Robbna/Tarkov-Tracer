@@ -12,7 +12,6 @@ const filters = ref({
 	global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 	shortName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-	weight: { value: null, matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO },
 });
 
 const initFilters = () => {
@@ -20,19 +19,31 @@ const initFilters = () => {
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 		name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 		shortName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-		weight: { value: null, matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO },
 	};
 };
+
+const showFlea = ref(true);
+
+const filteredItems = computed(() => {
+	return storeItems.items?.map((item) => {
+		if (showFlea.value) {
+			// Si isFiltered es false, devolver el item sin cambios
+			return item;
+		} else {
+			// Si isFiltered es true, eliminar el vendor con normalizedName "flea-market"
+			return {
+				...item,
+				sellFor: item.sellFor.filter((vendor) => vendor.vendor.normalizedName !== "flea-market"),
+			};
+		}
+	});
+});
 
 const clearFilter = () => {
 	initFilters();
 };
 
 initFilters();
-
-const isFleaMarket = (item: IItem): boolean => {
-	return item.sellFor.some((trader) => trader.vendor.normalizedName === "flea-market");
-};
 
 if (process.client) {
 	const isKeyPressed: { [key: string]: boolean } = {
@@ -66,7 +77,7 @@ if (process.client) {
 			</div>
 			<DataTable
 				v-if="!storeItems.isLoading"
-				:value="storeItems.items"
+				:value="filteredItems"
 				removableSort
 				showGridlines
 				scrollable
@@ -92,6 +103,10 @@ if (process.client) {
 							<span class="label-shortcut h-full">Ctrl + L</span>
 						</Button>
 						<h1 v-if="isDesktop && storeItems.items">{{ storeItems.items.length }} items loaded</h1>
+						<label class="flex flex-col items-center text-center gap-3 py-3">
+							Show flea market
+							<InputSwitch v-model="showFlea" />
+						</label>
 						<IconField iconPosition="left" class="flex justify-center items-center">
 							<InputIcon class="top-auto">
 								<i class="fa-solid fa-magnifying-glass" />
@@ -128,7 +143,7 @@ if (process.client) {
 					</template>
 				</Column>
 				<!-- SHORTNAME -->
-				<Column v-if="isDesktop" field="shortName" header="Short name" style="min-width: 12rem">
+				<Column v-if="isDesktop" field="shortName" header="Short name" style="min-width: 10rem">
 					<template #filter="{ filterModel, filterCallback }">
 						<InputText
 							v-model="filterModel.value"
@@ -140,16 +155,8 @@ if (process.client) {
 					</template>
 				</Column>
 				<!-- WEIGHT -->
-				<Column v-if="isDesktop" field="weight" sortable header="Weight" style="min-width: 12rem">
-					<template #filter="{ filterModel, filterCallback }">
-						<InputText
-							v-model="filterModel.value"
-							type="number"
-							@input="filterCallback()"
-							class="p-column-filter"
-							placeholder="Search"
-						/>
-					</template>
+				<Column v-if="isDesktop" field="weight" sortable header="Weight">
+					<template #body="slotProps"> {{ slotProps.data.weight }} kg </template>
 				</Column>
 				<!-- TRADERS -->
 				<Column field="basePrice" sortable header="Traders prices (buy). Highest to lowest">
@@ -158,7 +165,7 @@ if (process.client) {
 							<div class="trader-wrapper" v-for="trader in slotProps.data.sellFor" :key="trader.vendor.normalizedName">
 								<img
 									loading="lazy"
-									class="item-image"
+									class="trader-image"
 									:alt="trader.vendor.normalizedName"
 									:src="`${
 										storeTraders.traders?.find((t) => t.normalizedName === trader.vendor.normalizedName)?.image4xLink
@@ -185,6 +192,11 @@ if (process.client) {
 <style scoped>
 :deep(.p-paginator) {
 	justify-content: center;
+}
+
+:deep(.p-column-header-content) {
+	display: flex;
+	gap: 13px;
 }
 
 /* 
@@ -219,14 +231,13 @@ BACKGROUND COLOR FOR SELECTED ROW
 }
 
 .item-image {
-	width: 120px;
-	height: 120px;
+	width: 150px;
+	/* height: 120px; */
 	object-fit: contain;
 }
 
 .trader-image {
-	width: 50px;
-	height: 50px;
+	width: 130px;
 	object-fit: contain;
 }
 

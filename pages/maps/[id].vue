@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import MapSection from "~/sections/MapSection.vue";
 import { useMaps } from "~/stores/maps/Maps";
 
 const router = useRoute();
@@ -10,7 +9,13 @@ const selectedMap = storeMaps.maps.find((map) => map.id === router.params.id);
 </script>
 <template>
 	<main class="w-full flex flex-col items-center justify-center gap-40">
-		<MapSection v-if="selectedMap != null" :id="selectedMap.id" :map-data="selectedMap" />
+		<BaseCanvas
+			v-if="selectedMap != null"
+			:image-url="selectedMap?.imageUrl"
+			:max-zoom="1.5"
+			:min-zoom="0.1"
+			:aspect-ratio="[selectedMap.aspectRatio.width, selectedMap.aspectRatio.height]"
+		/>
 	</main>
 </template>
 

@@ -236,9 +236,9 @@ onMounted(() => {
 				<button @click="toggleDrawMode" class="flex flex-col items-center">
 					<span
 						>Current mode:
-						<strong class="mode-type">{{ mode === "draw" ? "Draw ✏️" : "Move 🖐️" }}</strong>
+						<strong class="mode-type">{{ mode === "draw" ? "DRAW" : "MOVE" }}</strong>
 					</span>
-					<small>{{ mode === "draw" ? "Click to move 🖐️" : "Click to draw ✏️" }}</small>
+					<small>{{ mode === "draw" ? "Click to move" : "Click to draw" }}</small>
 				</button>
 			</div>
 		</div>
@@ -250,6 +250,14 @@ onMounted(() => {
 <style scoped>
 button {
 	font-size: 1rem;
+	background-color: rgb(43, 45, 46);
+	border: none;
+	padding: 0.5rem;
+
+	&:hover {
+		background-color: rgb(21, 52, 63);
+		cursor: pointer;
+	}
 }
 
 .mode-type {

@@ -15,18 +15,21 @@ let isDragging = false;
 let lastPosX: number;
 let lastPosY: number;
 let isDrawing = false;
-let mode: "pan" | "draw" = "pan";
-const lineWidth = ref<string>("5"); // Default line width
+const mode = ref<"pan" | "draw">("pan");
+const lineWidth = ref<string>("20"); // Default line width
+let currentPath: fabric.Path | null = null;
 
 const maxZoom = computed(() => props.maxZoom);
 const minZoom = computed(() => props.minZoom);
 
+// Toggle between pan and draw modes
 const toggleDrawMode = () => {
-	mode = mode === "pan" ? "draw" : "pan";
-	canvas.isDrawingMode = mode === "draw";
+	mode.value = mode.value === "pan" ? "draw" : "pan";
+	canvas.isDrawingMode = mode.value === "draw";
 	canvas.selection = false;
 };
 
+// Clear all objects except the background image
 const clearCanvas = () => {
 	canvas.getObjects().forEach((obj) => {
 		if (obj !== img) {
@@ -36,15 +39,16 @@ const clearCanvas = () => {
 	canvas.renderAll();
 };
 
+// Handle zoom on mouse wheel
 const onMouseWheel = (opt: fabric.IEvent<WheelEvent>) => {
-	if (mode === "draw") return;
+	if (mode.value === "draw") return;
 	const { e } = opt;
-	zoomDelta(canvas, e.deltaY, e.offsetX, e.offsetY);
+	zoomDelta(e.deltaY, e.offsetX, e.offsetY);
 	e.preventDefault();
 	e.stopPropagation();
 };
 
-const zoomDelta = (canvas: fabric.Canvas, delta: number, x: number, y: number) => {
+const zoomDelta = (delta: number, x: number, y: number) => {
 	let zoom = canvas.getZoom();
 	zoom *= 0.999 ** delta;
 	zoom = Math.min(zoom, maxZoom.value);
@@ -53,191 +57,207 @@ const zoomDelta = (canvas: fabric.Canvas, delta: number, x: number, y: number) =
 	canvas.zoomToPoint(point, zoom);
 };
 
-const center = () => {
+const updateLineWidths = () => {
+	canvas.getObjects().forEach((obj) => {
+		if (obj instanceof fabric.Path) {
+			obj.set({ strokeWidth: parseInt(lineWidth.value, 10) });
+		}
+	});
+	canvas.renderAll();
+};
+
+// Center the canvas
+const centerCanvas = () => {
 	initZoom();
-	const T = canvas.viewportTransform;
-	if (T) {
-		T[4] = (canvas.width - img.width * canvas.getZoom()) / 2;
-		T[5] = (canvas.height - img.height * canvas.getZoom()) / 2;
+	const transform = canvas.viewportTransform;
+	if (transform) {
+		transform[4] = (canvas.width - img.width * canvas.getZoom()) / 2;
+		transform[5] = (canvas.height - img.height * canvas.getZoom()) / 2;
 		canvas.requestRenderAll();
 	}
 };
 
 const getClientPosition = (e: MouseEvent | TouchEvent) => {
 	const positionSource = "touches" in e ? e.touches[0] : e;
-	const { clientX, clientY } = positionSource;
-	return { clientX, clientY };
+	return { clientX: positionSource.clientX, clientY: positionSource.clientY };
 };
 
+// Event handlers for drawing
 const onMouseDown = (opt: fabric.IEvent<MouseEvent>) => {
 	const { e } = opt;
-	if (mode === "draw") {
-		console.log(lineWidth.value);
+	if (mode.value === "draw") {
 		isDrawing = true;
-		const pointer = canvas.getPointer(e);
-		const points = [pointer.x, pointer.y, pointer.x, pointer.y];
-		const line = new fabric.Line(points, {
-			strokeWidth: 4900, // Utiliza la variable lineWidth aquí
-			fill: "red",
-			stroke: "red",
-			originX: "center",
-			originY: "center",
-			selectable: false,
-			evented: false, // Disable events on the drawing objects
-		});
-		canvas.add(line);
-		return;
+	} else {
+		isDragging = true;
+		const { clientX, clientY } = getClientPosition(e);
+		lastPosX = clientX;
+		lastPosY = clientY;
+		canvas.selection = false;
+		canvas.discardActiveObject();
 	}
-	isDragging = true;
-	const { clientX, clientY } = getClientPosition(e);
-	lastPosX = clientX;
-	lastPosY = clientY;
-	canvas.selection = false;
-	canvas.discardActiveObject();
 };
 
 const onMouseMove = (opt: fabric.IEvent<MouseEvent>) => {
-	if (mode === "draw") {
-		if (!isDrawing) return;
-		const pointer = canvas.getPointer(opt.e);
-		const activeObject = canvas.getObjects().pop();
-		if (activeObject && activeObject.type === "line") {
-			const points = activeObject.get("points") as [number, number, number, number];
-			points[2] = pointer.x;
-			points[3] = pointer.y;
-			activeObject.set({ points });
-			canvas.renderAll();
-		}
-		return;
+	if (mode.value === "draw" && isDrawing && currentPath) {
+		// const pointer = canvas.getPointer(opt.e);
+		// currentPath.path.push(["L", pointer.x, pointer.y]);
+		// canvas.renderAll();
+		// updateLineWidths();
+	} else if (isDragging) {
+		const { clientX, clientY } = getClientPosition(opt.e);
+		const transform = canvas.viewportTransform as fabric.Point;
+		transform[4] += clientX - lastPosX;
+		transform[5] += clientY - lastPosY;
+		canvas.requestRenderAll();
+		lastPosX = clientX;
+		lastPosY = clientY;
 	}
-	if (!isDragging) {
-		return;
-	}
-	const { e } = opt;
-	const T = canvas.viewportTransform as fabric.Point;
-	const { clientX, clientY } = getClientPosition(e);
-	T[4] += clientX - lastPosX;
-	T[5] += clientY - lastPosY;
-	canvas.requestRenderAll();
-	lastPosX = clientX;
-	lastPosY = clientY;
 };
 
-const onMouseUp = (opt: fabric.IEvent<MouseEvent>) => {
-	if (mode === "draw") {
+const onMouseUp = () => {
+	if (mode.value === "draw") {
 		isDrawing = false;
-		return;
+		currentPath = null;
+		updateLineWidths();
+	} else {
+		isDragging = false;
+		canvas.selection = true;
 	}
-	isDragging = false;
-	canvas.selection = true;
 };
 
-const initZoom = () => {
+// Initialize canvas zoom to fit the image
+const initZoom = (): number => {
 	const widthRatio = canvas.width / img.width;
 	const heightRatio = canvas.height / img.height;
 	const zoom = Math.min(widthRatio, heightRatio);
 	canvas.setZoom(zoom);
+	return zoom;
+};
+
+// Initialize the canvas and load the image
+const initializeCanvas = () => {
+	canvas = new fabric.Canvas(htmlCanvas.value!);
+	canvas.on("mouse:wheel", onMouseWheel);
+	canvas.on("mouse:down", onMouseDown);
+	canvas.on("mouse:move", onMouseMove);
+	canvas.on("mouse:up", onMouseUp);
+
+	fabric.Image.fromURL(props.imageUrl, (_img) => {
+		img = _img;
+		img.selectable = false;
+		img.evented = false;
+		canvas.add(img);
+
+		const { width, height } = calculateCanvasSize(img);
+		htmlCanvas.value!.width = width;
+		htmlCanvas.value!.height = height;
+
+		canvas.setWidth(width);
+		canvas.setHeight(height);
+
+		const zoom = initZoom();
+		centerImage(zoom);
+
+		canvas.requestRenderAll();
+	});
+
+	// Watch lineWidth and update currentPath strokeWidth in real-time
+	watch(lineWidth, (newVal) => {
+		// if (currentPath) {
+		// currentPath.set({
+		// 	strokeWidth: parseInt(newVal, 10) / canvas.getZoom(),
+		// });
+		// updateLineWidths();
+		// canvas.renderAll();
+		// }
+	});
+};
+
+const calculateCanvasSize = (img: fabric.Image) => {
+	const maxWidth = window.innerWidth * 0.9;
+	const maxHeight = window.innerHeight * 0.7;
+	const aspectRatio = img.width / img.height;
+
+	let width = img.width;
+	let height = img.height;
+
+	if (aspectRatio >= 1) {
+		// Landscape or square
+		if (img.width > maxWidth) {
+			width = maxWidth;
+			height = maxWidth / aspectRatio;
+		}
+	} else {
+		// Portrait
+		if (img.height > maxHeight) {
+			height = maxHeight;
+			width = maxHeight * aspectRatio;
+		}
+	}
+
+	if (width > maxWidth) {
+		const ratio = maxWidth / width;
+		width = maxWidth;
+		height *= ratio;
+	}
+	if (height > maxHeight) {
+		const ratio = maxHeight / height;
+		height = maxHeight;
+		width *= ratio;
+	}
+
+	return { width, height };
+};
+
+const centerImage = (zoom: number) => {
+	const scaledImageWidth = img.width * zoom;
+	const scaledImageHeight = img.height * zoom;
+	const dx = (canvas.width - scaledImageWidth) / 2;
+	const dy = (canvas.height - scaledImageHeight) / 2;
+	const transform = canvas.viewportTransform;
+	if (transform) {
+		transform[4] += dx;
+		transform[5] += dy;
+	}
 };
 
 onMounted(() => {
 	if (htmlCanvas.value) {
-		canvas = new fabric.Canvas(htmlCanvas.value);
-		canvas.on("mouse:wheel", onMouseWheel);
-		canvas.on("mouse:down", onMouseDown);
-		canvas.on("mouse:move", onMouseMove);
-		canvas.on("mouse:up", onMouseUp);
-
-		fabric.Image.fromURL(props.imageUrl, (_img) => {
-			img = _img;
-			img.selectable = false;
-			img.evented = false;
-			canvas.add(img);
-
-			// Calculate maxWidth as 90% of the viewport width and set maxHeight
-			const maxWidth = window.innerWidth * 0.9;
-			const maxHeight = window.innerHeight * 0.7;
-
-			const aspectRatio = img.width / img.height;
-
-			if (aspectRatio >= 1) {
-				// Landscape or square
-				if (img.width > maxWidth) {
-					htmlCanvas.value.width = maxWidth;
-					htmlCanvas.value.height = maxWidth / aspectRatio;
-				} else {
-					htmlCanvas.value.width = img.width;
-					htmlCanvas.value.height = img.height;
-				}
-			} else {
-				// Portrait
-				if (img.height > maxHeight) {
-					htmlCanvas.value.height = maxHeight;
-					htmlCanvas.value.width = maxHeight * aspectRatio;
-				} else {
-					htmlCanvas.value.width = img.width;
-					htmlCanvas.value.height = img.height;
-				}
-			}
-
-			// Ensure canvas dimensions do not exceed the maximum dimensions
-			if (htmlCanvas.value.width > maxWidth) {
-				const ratio = maxWidth / htmlCanvas.value.width;
-				htmlCanvas.value.width = maxWidth;
-				htmlCanvas.value.height *= ratio;
-			}
-			if (htmlCanvas.value.height > maxHeight) {
-				const ratio = maxHeight / htmlCanvas.value.height;
-				htmlCanvas.value.height = maxHeight;
-				htmlCanvas.value.width *= ratio;
-			}
-
-			canvas.setWidth(htmlCanvas.value.width);
-			canvas.setHeight(htmlCanvas.value.height);
-
-			// initialize zoom
-			initZoom();
-
-			// initialize position
-			const scaledImageWidth = img.width * zoom;
-			const scaledImageHeight = img.height * zoom;
-			const dx = (canvas.width - scaledImageWidth) / 2;
-			const dy = (canvas.height - scaledImageHeight) / 2;
-			const T = canvas.viewportTransform;
-			if (T) {
-				T[4] += dx;
-				T[5] += dy;
-			}
-
-			canvas.requestRenderAll();
-		});
+		initializeCanvas();
 	}
 });
 </script>
 
 <template>
-	<div class="flex items-end flex-col gap-3">
-		<div class="flex gap-3">
-			<!-- <button @click="toggleDrawMode">Toggle Draw Mode</button> -->
-			<!-- <button @click="clearCanvas">Clear Canvas</button> -->
-			<button @click="center">Center</button>
-			<!-- <label style="margin-left: 10px">
-			Line Width:
-			<input type="range" v-model="lineWidth" min="1" max="100" step="0.1" />
-			{{ lineWidth }}
-		</label> -->
+	<div class="flex flex-col gap-3">
+		<div class="flex justify-between">
+			<button @click="clearCanvas">Clear Canvas</button>
+			<div class="flex flex-col items-center">
+				<button @click="toggleDrawMode" class="flex flex-col items-center">
+					<span
+						>Current mode:
+						<strong class="mode-type">{{ mode === "draw" ? "Draw ✏️" : "Move 🖐️" }}</strong>
+					</span>
+					<small>{{ mode === "draw" ? "Click to move 🖐️" : "Click to draw ✏️" }}</small>
+				</button>
+			</div>
 		</div>
 		<canvas ref="htmlCanvas"></canvas>
+		<button @click="centerCanvas">Center</button>
 	</div>
 </template>
 
 <style scoped>
 button {
-	width: 150px;
 	font-size: 1rem;
 }
 
+.mode-type {
+	font-weight: bolder;
+	text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
 canvas {
-	/* border: 3px solid red; */
 	background-color: rgba(0, 0, 0, 0.6);
 	backdrop-filter: blur(10px);
 }

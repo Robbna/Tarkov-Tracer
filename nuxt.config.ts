@@ -7,10 +7,24 @@ export default defineNuxtConfig({
 	alias: {
 		"@": "/<srcDir>",
 	},
-
 	// INDEX.HTML & JS
 	app: {
 		head: {
+			meta: [
+				{ charset: "utf-8" },
+				{ name: "viewport", content: "width=device-width, initial-scale=1" },
+				{
+					hid: "description",
+					name: "description",
+					content:
+						"Explore Escape From Tarkov with our detailed guide. Find maps, search for items, and check out the best gear tiers.",
+				},
+				{ name: "keywords", content: "Escape From Tarkov, guide, maps, items, tiers, best helmets, best armors" },
+				{ name: "author", content: "Devsiko" },
+				{ name: "robots", content: "index, follow" },
+				{ name: "theme-color", content: "#0e0e0e" },
+			],
+			link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
 			script: [
 				{
 					src: "/js/google_analytics.js",

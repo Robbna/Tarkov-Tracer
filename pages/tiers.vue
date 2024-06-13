@@ -23,6 +23,18 @@ const TIERS = [
 		basedOn: "https://youtu.be/pJ93-65t_8I?t=513",
 	},
 ];
+
+useHead({
+	title: useHeadTitle().getTitleBasedOnRoute("Tiers"),
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "Check out the best equipment tiers in Escape From Tarkov. Find the best helmets, armors, and more.",
+		},
+		{ name: "keywords", content: "Escape From Tarkov, best tiers, helmets, armors, equipment" },
+	],
+});
 </script>
 <template>
 	<main class="flex flex-col justify-center items-center gap-9 p-12">

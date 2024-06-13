@@ -2,6 +2,18 @@
 import { useMaps } from "~/stores/maps/Maps";
 
 const storeMaps = useMaps();
+
+useHead({
+	title: useHeadTitle().getTitleBasedOnRoute("Maps"),
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "Explore all maps in Escape From Tarkov with our detailed maps guide.",
+		},
+		{ name: "keywords", content: "Escape From Tarkov, maps, maps guide" },
+	],
+});
 </script>
 <template>
 	<main class="w-full grid justify-items-center grid-cols-1 md:grid-cols-3 gap-6">

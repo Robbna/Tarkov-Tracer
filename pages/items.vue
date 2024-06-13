@@ -8,6 +8,19 @@ const storeItems = useItems();
 const storeTraders = useTraders();
 const { isMobile, isDesktop } = useDevice();
 
+useHead({
+	title: useHeadTitle().getTitleBasedOnRoute("Items"),
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "Easily search and find any item in Escape From Tarkov with our efficient search tool.",
+		},
+		{ name: "keywords", content: "Escape From Tarkov, item search, items, guide" },
+	],
+});
+
+const showFlea = ref(true);
 const filters = ref({
 	name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 	shortName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -19,8 +32,6 @@ const initFilters = () => {
 		shortName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 	};
 };
-
-const showFlea = ref(true);
 
 const filteredItems = computed(() => {
 	return storeItems.items?.map((item) => {
@@ -87,7 +98,7 @@ if (process.client) {
 			>
 				<!-- HEADER -->
 				<template #header>
-					<div class="flex w-full justify-between items-center h-full">
+					<div class="flex w-full justify-between items-center h-full p-2">
 						<Button
 							v-if="isDesktop"
 							type="button"
@@ -99,10 +110,7 @@ if (process.client) {
 							<span class="label-shortcut h-full">Ctrl + L</span>
 						</Button>
 						<h1 v-if="isDesktop && storeItems.items">{{ storeItems.items.length }} items loaded</h1>
-						<label class="flex flex-col items-center text-center gap-3 py-3">
-							Show flea market
-							<InputSwitch v-model="showFlea" />
-						</label>
+						<ToggleButton v-model="showFlea" onLabel="Hide flea market" offLabel="Show flea market" />
 					</div>
 				</template>
 				<template #empty> No items found. </template>

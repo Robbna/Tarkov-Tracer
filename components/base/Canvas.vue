@@ -269,12 +269,12 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="flex flex-col gap-3">
-				<button class="flex items-center justify-center gap-3" @click="centerCanvas">
-					<i class="fa-solid fa-compass text-blue-300"></i>
+				<button class="bg-cyan-700 flex items-center justify-center gap-3" @click="centerCanvas">
+					<i class="fa-solid fa-compass"></i>
 					<span>Center</span>
 				</button>
-				<button @click="clearCanvas" class="bg-red-6 flex items-center justify-center gap-3">
-					<i class="fa-solid fa-trash-can text-red-600"></i>
+				<button @click="clearCanvas" class="bg-red-600 flex items-center justify-center gap-3">
+					<i class="fa-solid fa-trash-can"></i>
 					<span>Clear</span>
 				</button>
 			</div>
@@ -286,12 +286,12 @@ onMounted(() => {
 <style scoped>
 button {
 	font-size: 1.3rem;
-	/* background-color: rgb(78, 79, 80); */
 	border: none;
 	padding: 0.49rem;
+	height: 40px;
 
 	&:hover {
-		background-color: rgb(21, 52, 63);
+		border: 1px solid #f1f1f1;
 		cursor: pointer;
 	}
 }
@@ -305,9 +305,6 @@ button {
 		color: rgb(119, 196, 125);
 		text-shadow: 0 0 5px green;
 	}
-}
-
-.button-center {
 }
 
 .line-size-preview {

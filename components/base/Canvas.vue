@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-nocheck
 import { fabric } from "fabric";
 
 const props = defineProps<{
@@ -15,18 +16,24 @@ let isDragging = false;
 let lastPosX: number;
 let lastPosY: number;
 let isDrawing = false;
+const spacePressed = ref(false);
 const mode = ref<"pan" | "draw">("pan");
 const lineWidth = ref<string>("20"); // Default line width
+const colorHEX = ref<string>("ffffff");
 let currentPath: fabric.Path | null = null;
 
 const maxZoom = computed(() => props.maxZoom);
 const minZoom = computed(() => props.minZoom);
 
 // Toggle between pan and draw modes
-const toggleDrawMode = () => {
-	mode.value = mode.value === "pan" ? "draw" : "pan";
-	canvas.isDrawingMode = mode.value === "draw";
-	canvas.selection = false;
+// const toggleDrawMode = () => {
+// 	mode.value = mode.value === "pan" ? "draw" : "pan";
+// 	canvas.isDrawingMode = mode.value === "draw";
+// 	canvas.selection = false;
+// };
+
+const clamp = (number, min, max) => {
+	return Math.max(min, Math.min(number, max));
 };
 
 // Clear all objects except the background image
@@ -57,14 +64,14 @@ const zoomDelta = (delta: number, x: number, y: number) => {
 	canvas.zoomToPoint(point, zoom);
 };
 
-const updateLineWidths = () => {
-	canvas.getObjects().forEach((obj) => {
-		if (obj instanceof fabric.Path) {
-			obj.set({ strokeWidth: parseInt(lineWidth.value, 10) });
-		}
-	});
-	canvas.renderAll();
-};
+// const updateLineWidths = () => {
+// 	canvas.getObjects().forEach((obj) => {
+// 		if (obj instanceof fabric.Path) {
+// 			obj.set({ strokeWidth: parseInt(lineWidth.value, 10) });
+// 		}
+// 	});
+// 	canvas.renderAll();
+// };
 
 // Center the canvas
 const centerCanvas = () => {
@@ -85,9 +92,7 @@ const getClientPosition = (e: MouseEvent | TouchEvent) => {
 // Event handlers for drawing
 const onMouseDown = (opt: fabric.IEvent<MouseEvent>) => {
 	const { e } = opt;
-	if (mode.value === "draw") {
-		isDrawing = true;
-	} else {
+	if (mode.value !== "draw") {
 		isDragging = true;
 		const { clientX, clientY } = getClientPosition(e);
 		lastPosX = clientX;
@@ -98,12 +103,7 @@ const onMouseDown = (opt: fabric.IEvent<MouseEvent>) => {
 };
 
 const onMouseMove = (opt: fabric.IEvent<MouseEvent>) => {
-	if (mode.value === "draw" && isDrawing && currentPath) {
-		// const pointer = canvas.getPointer(opt.e);
-		// currentPath.path.push(["L", pointer.x, pointer.y]);
-		// canvas.renderAll();
-		// updateLineWidths();
-	} else if (isDragging) {
+	if (isDragging && spacePressed.value) {
 		const { clientX, clientY } = getClientPosition(opt.e);
 		const transform = canvas.viewportTransform as fabric.Point;
 		transform[4] += clientX - lastPosX;
@@ -118,7 +118,6 @@ const onMouseUp = () => {
 	if (mode.value === "draw") {
 		isDrawing = false;
 		currentPath = null;
-		updateLineWidths();
 	} else {
 		isDragging = false;
 		canvas.selection = true;
@@ -134,9 +133,28 @@ const initZoom = (): number => {
 	return zoom;
 };
 
+// Handle spacebar keydown and keyup
+const onKeyDown = (e: KeyboardEvent) => {
+	if (e.code === "Space") {
+		spacePressed.value = true;
+		canvas.isDrawingMode = false;
+	}
+};
+
+const onKeyUp = (e: KeyboardEvent) => {
+	if (e.code === "Space") {
+		spacePressed.value = false;
+		// canvas.isDrawingMode = mode.value === "draw";
+		canvas.isDrawingMode = true;
+	}
+};
+
 // Initialize the canvas and load the image
 const initializeCanvas = () => {
 	canvas = new fabric.Canvas(htmlCanvas.value!);
+	canvas.isDrawingMode = true;
+	// canvas.freeDrawingBrush.color = "#6466f1";
+	// canvas.freeDrawingBrush.width = parseInt(lineWidth.value, 10);
 	canvas.on("mouse:wheel", onMouseWheel);
 	canvas.on("mouse:down", onMouseDown);
 	canvas.on("mouse:move", onMouseMove);
@@ -161,8 +179,13 @@ const initializeCanvas = () => {
 		canvas.requestRenderAll();
 	});
 
+	window.addEventListener("keydown", onKeyDown);
+	window.addEventListener("keyup", onKeyUp);
+
 	// Watch lineWidth and update currentPath strokeWidth in real-time
-	watch(lineWidth, (newVal) => {
+	watchEffect(() => {
+		canvas.freeDrawingBrush.width = parseInt(lineWidth.value, 10);
+		canvas.freeDrawingBrush.color = `#${colorHEX.value}`;
 		// if (currentPath) {
 		// currentPath.set({
 		// 	strokeWidth: parseInt(newVal, 10) / canvas.getZoom(),
@@ -174,13 +197,11 @@ const initializeCanvas = () => {
 };
 
 const calculateCanvasSize = (img: fabric.Image) => {
-	const maxWidth = window.innerWidth * 0.9;
+	const maxWidth = window.innerWidth * 0.7;
 	const maxHeight = window.innerHeight * 0.7;
 	const aspectRatio = img.width / img.height;
-
 	let width = img.width;
 	let height = img.height;
-
 	if (aspectRatio >= 1) {
 		// Landscape or square
 		if (img.width > maxWidth) {
@@ -194,7 +215,6 @@ const calculateCanvasSize = (img: fabric.Image) => {
 			width = maxHeight * aspectRatio;
 		}
 	}
-
 	if (width > maxWidth) {
 		const ratio = maxWidth / width;
 		width = maxWidth;
@@ -205,7 +225,6 @@ const calculateCanvasSize = (img: fabric.Image) => {
 		height = maxHeight;
 		width *= ratio;
 	}
-
 	return { width, height };
 };
 
@@ -229,21 +248,31 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="flex flex-col gap-3">
-		<div class="flex justify-between">
-			<button @click="clearCanvas">Clear Canvas</button>
-			<div class="flex flex-col items-center">
-				<button @click="toggleDrawMode" class="flex flex-col items-center">
+	<div class="flex relative gap-4">
+		<div class="flex flex-col gap-2 justify-between">
+			<div class="flex flex-col w-full gap-2 items-center justify-center">
+				<h1 class="text-xl">Press <span :class="['space', { pressed: spacePressed }]">SPACE</span> to move!</h1>
+				<ColorPicker v-model="colorHEX" inputId="cp-hex" inline format="hex" />
+				<p>Line width: <span class="line-size-label">{{ lineWidth }}px</span></p>
+				<div class="flex flex-col items-center gap-7 w-full py-3">
+					<input class="w-full" type="range" v-model="lineWidth" placeholder="Line width" min="10" max="100" />
 					<span
-						>Current mode:
-						<strong class="mode-type">{{ mode === "draw" ? "DRAW" : "MOVE" }}</strong>
-					</span>
-					<small>{{ mode === "draw" ? "Click to move" : "Click to draw" }}</small>
-				</button>
+						class="line-size-preview"
+						:style="{
+							width: `${clamp(parseInt(lineWidth, 10) / 2, 1, 100)}px`,
+							height: `${clamp(parseInt(lineWidth, 10) / 2, 1, 100)}px`,
+							backgroundColor: `#${colorHEX}`,
+						}"
+					/>
+				</div>
 			</div>
+			<button @click="clearCanvas" class="flex gap-2 items-center justify-center">
+				<i class="fa-solid fa-trash" />
+				<span>Clear all</span>
+			</button>
 		</div>
-		<canvas ref="htmlCanvas"></canvas>
-		<button @click="centerCanvas">Center</button>
+		<button class="button-center" @click="centerCanvas">Center</button>
+		<canvas ref="htmlCanvas" />
 	</div>
 </template>
 
@@ -252,12 +281,39 @@ button {
 	font-size: 1rem;
 	background-color: rgb(43, 45, 46);
 	border: none;
-	padding: 0.5rem;
+	padding: 0.69rem;
 
 	&:hover {
 		background-color: rgb(21, 52, 63);
 		cursor: pointer;
 	}
+}
+
+.space {
+	color: rgb(250, 133, 133);
+	text-shadow: 0 0 5px red;
+	font-size: 1.5rem;
+
+	&.pressed {
+		color: rgb(119, 196, 125);
+		text-shadow: 0 0 5px green;
+	}
+}
+
+.button-center {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
+	margin: 13px;
+}
+
+.line-size-preview {
+	border-radius: 50%;
+}
+
+.line-size-label {
+	font-size: 1.4rem;
 }
 
 .mode-type {
@@ -268,5 +324,25 @@ button {
 canvas {
 	background-color: rgba(0, 0, 0, 0.6);
 	backdrop-filter: blur(10px);
+}
+
+input[type="range"] {
+	height: 2px;
+	appearance: none;
+	background: #f1f1f1;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+	width: 100%;
+	cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	height: 30px;
+	width: 10px;
+	background: var(--primary);
+	box-shadow: 0 0 3px var(--bg-primary);
+	cursor: pointer;
+	appearance: none;
 }
 </style>

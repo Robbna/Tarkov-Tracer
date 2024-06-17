@@ -253,7 +253,9 @@ onMounted(() => {
 			<div class="flex flex-col w-full gap-2 items-center justify-center">
 				<h1 class="text-xl">Press <span :class="['space', { pressed: spacePressed }]">SPACE</span> to move!</h1>
 				<ColorPicker v-model="colorHEX" inputId="cp-hex" inline format="hex" />
-				<p>Line width: <span class="line-size-label">{{ lineWidth }}px</span></p>
+				<p>
+					Line width: <span class="line-size-label">{{ lineWidth }}px</span>
+				</p>
 				<div class="flex flex-col items-center gap-7 w-full py-3">
 					<input class="w-full" type="range" v-model="lineWidth" placeholder="Line width" min="10" max="100" />
 					<span
@@ -266,22 +268,27 @@ onMounted(() => {
 					/>
 				</div>
 			</div>
-			<button @click="clearCanvas" class="flex gap-2 items-center justify-center">
-				<i class="fa-solid fa-trash" />
-				<span>Clear all</span>
-			</button>
+			<div class="flex flex-col gap-3">
+				<button class="flex items-center justify-center gap-3" @click="centerCanvas">
+					<i class="fa-solid fa-compass text-blue-300"></i>
+					<span>Center</span>
+				</button>
+				<button @click="clearCanvas" class="bg-red-6 flex items-center justify-center gap-3">
+					<i class="fa-solid fa-trash-can text-red-600"></i>
+					<span>Clear</span>
+				</button>
+			</div>
 		</div>
-		<button class="button-center" @click="centerCanvas">Center</button>
 		<canvas ref="htmlCanvas" />
 	</div>
 </template>
 
 <style scoped>
 button {
-	font-size: 1rem;
-	background-color: rgb(43, 45, 46);
+	font-size: 1.3rem;
+	/* background-color: rgb(78, 79, 80); */
 	border: none;
-	padding: 0.69rem;
+	padding: 0.49rem;
 
 	&:hover {
 		background-color: rgb(21, 52, 63);
@@ -301,11 +308,6 @@ button {
 }
 
 .button-center {
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: 1;
-	margin: 13px;
 }
 
 .line-size-preview {

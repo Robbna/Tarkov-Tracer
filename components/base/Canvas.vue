@@ -275,7 +275,7 @@ onMounted(() => {
 				</button>
 				<button @click="clearCanvas" class="bg-red-600 flex items-center justify-center gap-3">
 					<i class="fa-solid fa-trash-can"></i>
-					<span>Clear</span>
+					<span>Delete</span>
 				</button>
 			</div>
 		</div>

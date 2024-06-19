@@ -7,8 +7,8 @@ const TIERS = [
 	{
 		title: "Armors",
 		imageUrl: ArmorsTier,
-		infoBy: "Leviticus",
-		basedOn: "https://www.youtube.com/watch?v=8XjqpVmM-ow",
+		infoBy: "Gigabeef",
+		basedOn: "https://www.youtube.com/watch?v=UAEx4I21Svk",
 	},
 	{
 		title: "Helmets",

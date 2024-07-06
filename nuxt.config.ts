@@ -7,6 +7,7 @@ export default defineNuxtConfig({
 	alias: {
 		"@": "/<srcDir>",
 	},
+	plugins: ["~/plugins/disable-right-click.ts"],
 	// INDEX.HTML & JS
 	app: {
 		head: {

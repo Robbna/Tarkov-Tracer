@@ -14,7 +14,7 @@ onMounted(() => {
 });
 </script>
 <template>
-	<footer class="flex flex-col gap-3 text-center pt-20 p-3">
+	<footer class="flex flex-col gap-3 text-center p-3">
 		<p class="current-date">
 			Game content and materials are trademarks and copyrights of Battlestate Games and its licensors. All rights
 			reserved.

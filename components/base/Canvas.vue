@@ -15,22 +15,14 @@ let img: fabric.Image;
 let isDragging = false;
 let lastPosX: number;
 let lastPosY: number;
-let isDrawing = false;
-const spacePressed = ref(false);
+const middleMousePressed = ref(false);
 const mode = ref<"pan" | "draw">("pan");
-const lineWidth = ref<string>("20"); // Default line width
+const lineWidth = ref<string>("20");
 const colorHEX = ref<string>("ffffff");
 let currentPath: fabric.Path | null = null;
 
 const maxZoom = computed(() => props.maxZoom);
 const minZoom = computed(() => props.minZoom);
-
-// Toggle between pan and draw modes
-// const toggleDrawMode = () => {
-// 	mode.value = mode.value === "pan" ? "draw" : "pan";
-// 	canvas.isDrawingMode = mode.value === "draw";
-// 	canvas.selection = false;
-// };
 
 const clamp = (number, min, max) => {
 	return Math.max(min, Math.min(number, max));
@@ -64,15 +56,6 @@ const zoomDelta = (delta: number, x: number, y: number) => {
 	canvas.zoomToPoint(point, zoom);
 };
 
-// const updateLineWidths = () => {
-// 	canvas.getObjects().forEach((obj) => {
-// 		if (obj instanceof fabric.Path) {
-// 			obj.set({ strokeWidth: parseInt(lineWidth.value, 10) });
-// 		}
-// 	});
-// 	canvas.renderAll();
-// };
-
 // Center the canvas
 const centerCanvas = () => {
 	initZoom();
@@ -103,7 +86,7 @@ const onMouseDown = (opt: fabric.IEvent<MouseEvent>) => {
 };
 
 const onMouseMove = (opt: fabric.IEvent<MouseEvent>) => {
-	if (isDragging && spacePressed.value) {
+	if (isDragging && middleMousePressed.value) {
 		const { clientX, clientY } = getClientPosition(opt.e);
 		const transform = canvas.viewportTransform as fabric.Point;
 		transform[4] += clientX - lastPosX;
@@ -133,19 +116,28 @@ const initZoom = (): number => {
 	return zoom;
 };
 
-// Handle spacebar keydown and keyup
-const onKeyDown = (e: KeyboardEvent) => {
-	if (e.code === "Space") {
-		spacePressed.value = true;
-		canvas.isDrawingMode = false;
+// Handle middle mouse button events
+const onMiddleMouseDown = (e: MouseEvent) => {
+	if (e.button === 1) {
+		middleMousePressed.value = true;
+		isDragging = true;
+		const { clientX, clientY } = getClientPosition(e);
+		lastPosX = clientX;
+		lastPosY = clientY;
+		canvas.selection = false;
+		canvas.discardActiveObject();
+
+		document.body.style.overflow = "hidden";
 	}
 };
 
-const onKeyUp = (e: KeyboardEvent) => {
-	if (e.code === "Space") {
-		spacePressed.value = false;
-		// canvas.isDrawingMode = mode.value === "draw";
-		canvas.isDrawingMode = true;
+const onMiddleMouseUp = (e: MouseEvent) => {
+	if (e.button === 1) {
+		middleMousePressed.value = false;
+		isDragging = false;
+		canvas.selection = true;
+
+		document.body.style.overflow = "auto";
 	}
 };
 
@@ -153,8 +145,6 @@ const onKeyUp = (e: KeyboardEvent) => {
 const initializeCanvas = () => {
 	canvas = new fabric.Canvas(htmlCanvas.value!);
 	canvas.isDrawingMode = true;
-	// canvas.freeDrawingBrush.color = "#6466f1";
-	// canvas.freeDrawingBrush.width = parseInt(lineWidth.value, 10);
 	canvas.on("mouse:wheel", onMouseWheel);
 	canvas.on("mouse:down", onMouseDown);
 	canvas.on("mouse:move", onMouseMove);
@@ -179,20 +169,13 @@ const initializeCanvas = () => {
 		canvas.requestRenderAll();
 	});
 
-	window.addEventListener("keydown", onKeyDown);
-	window.addEventListener("keyup", onKeyUp);
+	window.addEventListener("mousedown", onMiddleMouseDown);
+	window.addEventListener("mouseup", onMiddleMouseUp);
 
 	// Watch lineWidth and update currentPath strokeWidth in real-time
 	watchEffect(() => {
 		canvas.freeDrawingBrush.width = parseInt(lineWidth.value, 10);
 		canvas.freeDrawingBrush.color = `#${colorHEX.value}`;
-		// if (currentPath) {
-		// currentPath.set({
-		// 	strokeWidth: parseInt(newVal, 10) / canvas.getZoom(),
-		// });
-		// updateLineWidths();
-		// canvas.renderAll();
-		// }
 	});
 };
 
@@ -249,9 +232,8 @@ onMounted(() => {
 
 <template>
 	<div class="flex relative gap-4">
-		<div class="flex flex-col gap-2 justify-between">
+		<div class="flex flex-col gap-2 justify-between overflow-auto">
 			<div class="flex flex-col w-full gap-2 items-center justify-center">
-				<h1 class="text-xl">Press <span :class="['space', { pressed: spacePressed }]">SPACE</span> to move!</h1>
 				<ColorPicker v-model="colorHEX" inputId="cp-hex" inline format="hex" />
 				<p>
 					Line width: <span class="line-size-label">{{ lineWidth }}px</span>
@@ -267,6 +249,9 @@ onMounted(() => {
 						}"
 					/>
 				</div>
+			</div>
+			<div class="flex w-full items-center justify-center">
+				<img class="mouse-controller" src="~/assets/images/mouse_controller.webp" />
 			</div>
 			<div class="flex flex-col gap-3">
 				<button class="bg-cyan-700 flex items-center justify-center gap-3" @click="centerCanvas">
@@ -294,6 +279,11 @@ button {
 		border: 1px solid #f1f1f1;
 		cursor: pointer;
 	}
+}
+
+.mouse-controller {
+	width: 100%;
+	max-width: 250px;
 }
 
 .space {

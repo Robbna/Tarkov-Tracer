@@ -15,7 +15,7 @@ let img: fabric.Image;
 let isDragging = false;
 let lastPosX: number;
 let lastPosY: number;
-const middleMousePressed = ref(false);
+const rightMousePressed = ref(false);
 const mode = ref<"pan" | "draw">("pan");
 const lineWidth = ref<string>("20");
 const colorHEX = ref<string>("ffffff");
@@ -86,7 +86,7 @@ const onMouseDown = (opt: fabric.IEvent<MouseEvent>) => {
 };
 
 const onMouseMove = (opt: fabric.IEvent<MouseEvent>) => {
-	if (isDragging && middleMousePressed.value) {
+	if (isDragging && rightMousePressed.value) {
 		const { clientX, clientY } = getClientPosition(opt.e);
 		const transform = canvas.viewportTransform as fabric.Point;
 		transform[4] += clientX - lastPosX;
@@ -116,10 +116,10 @@ const initZoom = (): number => {
 	return zoom;
 };
 
-// Handle middle mouse button events
-const onMiddleMouseDown = (e: MouseEvent) => {
-	if (e.button === 1) {
-		middleMousePressed.value = true;
+// Handle right mouse button events
+const onRightMouseDown = (e: MouseEvent) => {
+	if (e.button === 2) {
+		rightMousePressed.value = true;
 		isDragging = true;
 		const { clientX, clientY } = getClientPosition(e);
 		lastPosX = clientX;
@@ -131,9 +131,9 @@ const onMiddleMouseDown = (e: MouseEvent) => {
 	}
 };
 
-const onMiddleMouseUp = (e: MouseEvent) => {
-	if (e.button === 1) {
-		middleMousePressed.value = false;
+const onRightMouseUp = (e: MouseEvent) => {
+	if (e.button === 2) {
+		rightMousePressed.value = false;
 		isDragging = false;
 		canvas.selection = true;
 
@@ -169,8 +169,8 @@ const initializeCanvas = () => {
 		canvas.requestRenderAll();
 	});
 
-	window.addEventListener("mousedown", onMiddleMouseDown);
-	window.addEventListener("mouseup", onMiddleMouseUp);
+	window.addEventListener("mousedown", onRightMouseDown);
+	window.addEventListener("mouseup", onRightMouseUp);
 
 	// Watch lineWidth and update currentPath strokeWidth in real-time
 	watchEffect(() => {

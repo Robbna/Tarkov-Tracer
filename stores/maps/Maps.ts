@@ -76,13 +76,13 @@ const MAPS_LIST: IMap[] = [
 	{
 		name: "Factory",
 		id: "factory",
-		imageUrl: "https://tarkov.dev/maps/factory-3d.jpg",
+		imageUrl: "https://tarkov.dev/maps/factory-2d.jpg",
 		maxZoom: 540,
 		wiki: "https://escapefromtarkov.fandom.com/wiki/Factory",
 		raidDuration: 20,
 		aspectRatio: {
-			width: 16,
-			height: 9,
+			width: 810,
+			height: 401
 		},
 	},
 	{

@@ -180,8 +180,8 @@ const initializeCanvas = () => {
 };
 
 const calculateCanvasSize = (img: fabric.Image) => {
-	const maxWidth = window.innerWidth * 0.7;
-	const maxHeight = window.innerHeight * 0.7;
+	const maxWidth = window.innerWidth * 0.75;
+	const maxHeight = window.innerHeight * 0.75;
 	const aspectRatio = img.width / img.height;
 	let width = img.width;
 	let height = img.height;
@@ -222,21 +222,29 @@ const centerImage = (zoom: number) => {
 		transform[5] += dy;
 	}
 };
+watch(colorHEX, () => {
+	localStorage.setItem("selectedColor", colorHEX.value);
+});
 
 onMounted(() => {
 	if (htmlCanvas.value) {
 		initializeCanvas();
 	}
+
+	const savedColor = localStorage.getItem("selectedColor");
+	if (savedColor) {
+		colorHEX.value = savedColor;
+	}
 });
 </script>
 
 <template>
-	<div class="flex relative gap-4">
-		<div class="flex flex-col gap-2 justify-between overflow-auto">
+	<div class="flex relative gap-6">
+		<div class="w-40 flex flex-col gap-2 justify-between">
 			<div class="flex flex-col w-full gap-2 items-center justify-center">
 				<ColorPicker v-model="colorHEX" inputId="cp-hex" inline format="hex" />
-				<p>
-					Line width: <span class="line-size-label">{{ lineWidth }}px</span>
+				<p class="flex gap-3 items-center">
+					<span>Line width:</span> <span class="line-size-label">{{ lineWidth }}px</span>
 				</p>
 				<div class="flex flex-col items-center gap-7 w-full py-3">
 					<input class="w-full" type="range" v-model="lineWidth" placeholder="Line width" min="10" max="100" />
@@ -302,7 +310,7 @@ button {
 }
 
 .line-size-label {
-	font-size: 1.4rem;
+	font-size: 1.5rem;
 }
 
 .mode-type {

@@ -28,13 +28,13 @@ const MAPS_LIST: IMap[] = [
 	{
 		name: "Interchange",
 		id: "interchange",
-		imageUrl: "https://i.redd.it/cc75d84cu9m41.jpg",
-		maxZoom: 1240,
+		imageUrl: "https://www.re3mr.com/maps/Interchange/re3mrULTRA3Dmap.png",
+		maxZoom: 2740,
 		wiki: "https://escapefromtarkov.fandom.com/wiki/Interchange",
 		raidDuration: 40,
 		aspectRatio: {
-			width: 8000,
-			height: 4327,
+			width: 827,
+			height: 565,
 		},
 	},
 	{

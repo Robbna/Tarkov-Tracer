@@ -24,7 +24,7 @@ useHead({
 			v-if="selectedMap != null"
 			:image-url="selectedMap?.imageUrl"
 			:max-zoom="1.5"
-			:min-zoom="0.1"
+			:min-zoom="-0.1"
 			:aspect-ratio="[selectedMap.aspectRatio.width, selectedMap.aspectRatio.height]"
 		/>
 	</main>

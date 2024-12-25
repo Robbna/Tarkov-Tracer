@@ -77,7 +77,7 @@ if (process.client) {
 
 <template>
 	<main class="flex flex-col items-center justify-center gap-9">
-		<section class="w-[80%] flex flex-col gap-3">
+		<section class="w-[90%] flex flex-col gap-3">
 			<div v-if="storeItems.isLoading" class="flex flex-col gap-3">
 				<Skeleton height="50px" />
 				<Skeleton height="450px" />
@@ -159,8 +159,8 @@ if (process.client) {
 				<!-- TRADERS -->
 				<Column field="basePrice" sortable header="Traders prices (buy). Highest to lowest">
 					<template #body="slotProps">
-						<div class="flex gap-2">
-							<div class="trader-wrapper" v-for="trader in slotProps.data.sellFor" :key="trader.vendor.normalizedName">
+						<div class="grid grid-cols-2 justify-items-center gap-2">
+							<div class="trader-wrapper" v-for="(trader, index) in slotProps.data.sellFor" :key="trader.vendor.normalizedName">
 								<img
 									loading="lazy"
 									class="trader-image"
@@ -169,6 +169,7 @@ if (process.client) {
 										storeTraders.traders?.find((t) => t.normalizedName === trader.vendor.normalizedName)?.image4xLink
 									}`"
 								/>
+								<small class="absolute top-0 left-0 dollar-sign">{{ '$'.repeat(slotProps.data.sellFor.length - index) }}</small>
 								<div class="trader-price flex gap-2">
 									<span> {{ trader.price }}</span>
 									<span>
@@ -195,6 +196,14 @@ if (process.client) {
 :deep(.p-column-header-content) {
 	display: flex;
 	gap: 13px;
+}
+
+.dollar-sign {
+	font-size: 0.8rem;
+	font-weight: bolder;
+	letter-spacing: 3px;
+	text-shadow: 1px 1px 5px rgba(0, 0, 0, 1);
+	color: #22c55e;
 }
 
 /* 
@@ -230,17 +239,20 @@ BACKGROUND COLOR FOR SELECTED ROW
 
 .item-image {
 	width: 150px;
-	/* height: 120px; */
 	object-fit: contain;
 }
 
 .trader-image {
-	width: 130px;
+	width: 100%;
+	max-width: 150px;
 	object-fit: contain;
 }
 
 .trader-wrapper {
 	position: relative;
+	/* @media screen and (max-width: 768px) {
+		max-width: 150px;
+	} */
 }
 
 .trader-price {
@@ -257,6 +269,8 @@ BACKGROUND COLOR FOR SELECTED ROW
 	justify-content: start;
 	align-items: end;
 	padding: 5px;
+
+	font-size: 14px;
 }
 
 .item-name-anchor {
